@@ -1,12 +1,13 @@
 {
-  "name": "project",
+  "name": "btc-conference-registration-2024",
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "vercel-build": "npm run build"
   },
   "keywords": [],
   "author": "",

@@ -151,7 +151,7 @@ export default function BitcoinConferenceIndiaForm() {
       } else if (result.method === 'local-storage') {
         setServerMessage("Registration saved locally! Your data is secure and will be submitted when connection is restored.");
       } else {
-        setServerMessage(result.message || "Registration successful! Thank you for registering for Bitcoin Conference India.");
+        setServerMessage((result as any).message || "Registration successful! Thank you for registering for Bitcoin Conference India.");
       }
       
       // Clear the form

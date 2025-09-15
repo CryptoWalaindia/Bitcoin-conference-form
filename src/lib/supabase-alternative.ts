@@ -12,6 +12,9 @@ export const supabaseAlt = createClient(supabaseUrl, supabaseAnonKey, {
   global: {
     headers: {
       'x-my-custom-header': 'bitcoin-conference-form',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
+      'User-Agent': 'BitcoinConferenceForm/1.0',
     },
   },
   db: {
@@ -21,21 +24,6 @@ export const supabaseAlt = createClient(supabaseUrl, supabaseAnonKey, {
     params: {
       eventsPerSecond: 2,
     },
-  },
-  // Network optimizations
-  fetch: (url, options = {}) => {
-    return fetch(url, {
-      ...options,
-      // Add custom headers that might help with network issues
-      headers: {
-        ...options.headers,
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-        'User-Agent': 'BitcoinConferenceForm/1.0',
-      },
-      // Increase timeout
-      signal: AbortSignal.timeout(30000), // 30 second timeout
-    })
   }
 })
 
@@ -102,7 +90,7 @@ export async function testAlternativeConnectivity() {
       signal: AbortSignal.timeout(15000)
     })
     tests.push({ test: 'HEAD request', success: response.ok || response.status === 404, status: response.status })
-  } catch (error) {
+  } catch (error: any) {
     tests.push({ test: 'HEAD request', success: false, error: error.message })
   }
   
@@ -113,7 +101,7 @@ export async function testAlternativeConnectivity() {
       .select('count', { count: 'exact', head: true })
     
     tests.push({ test: 'SELECT query', success: !error, error: error?.message })
-  } catch (error) {
+  } catch (error: any) {
     tests.push({ test: 'SELECT query', success: false, error: error.message })
   }
   
@@ -129,7 +117,7 @@ export async function testAlternativeConnectivity() {
       signal: AbortSignal.timeout(15000)
     })
     tests.push({ test: 'Custom User-Agent', success: response.ok || response.status === 404, status: response.status })
-  } catch (error) {
+  } catch (error: any) {
     tests.push({ test: 'Custom User-Agent', success: false, error: error.message })
   }
   
@@ -148,7 +136,7 @@ export async function runNetworkDiagnostics() {
       downlink: (navigator as any).connection.downlink,
       rtt: (navigator as any).connection.rtt,
     } : 'Not available',
-    tests: []
+    tests: [] as any[]
   }
   
   // Test DNS resolution speed
@@ -157,7 +145,7 @@ export async function runNetworkDiagnostics() {
     await fetch(supabaseUrl, { method: 'HEAD', signal: AbortSignal.timeout(5000) })
     const end = performance.now()
     diagnostics.tests.push({ test: 'DNS Resolution', time: `${Math.round(end - start)}ms`, success: true })
-  } catch (error) {
+  } catch (error: any) {
     diagnostics.tests.push({ test: 'DNS Resolution', error: error.message, success: false })
   }
   

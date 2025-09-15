@@ -22,20 +22,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   global: {
     headers: {
       'x-client-info': 'bitcoin-conference-form',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
     },
-  },
-  // Custom fetch with network optimizations
-  fetch: (url, options = {}) => {
-    return fetch(url, {
-      ...options,
-      headers: {
-        ...options.headers,
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-      },
-      // Extended timeout for network issues
-      signal: options.signal || AbortSignal.timeout(25000),
-    })
   }
 })
 
@@ -104,7 +93,7 @@ export async function submitRegistration(data: RegistrationData) {
     // Clear any locally stored data on successful submission
     clearLocalRegistrations()
     
-    return { success: true, method: 'supabase', data: result.data }
+    return { success: true, method: 'supabase', data: result?.data || [] }
   } catch (err: any) {
     console.error('All Supabase attempts failed:', err)
     
