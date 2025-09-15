@@ -203,6 +203,7 @@ export default function BitcoinConferenceIndiaForm() {
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white drop-shadow-lg">
                 Bitcoin Conference India
               </h1>
+              {/* Auto-deployment test - this comment will trigger automatic deployment */}
               <div className="flex items-center gap-2 mt-2">
                 <span className="px-3 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-semibold rounded-full animate-pulse">
                   🔥 LIMITED SEATS
