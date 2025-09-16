@@ -2,6 +2,8 @@
 
 A modern, full-stack registration form for the Bitcoin Conference India with enhanced visual design, database integration, and secure data storage.
 
+🚀 **Latest Update**: Mobile registration status indicators are now properly hidden on mobile devices!
+
 ## Features
 
 ### 🎨 Visual Enhancements
