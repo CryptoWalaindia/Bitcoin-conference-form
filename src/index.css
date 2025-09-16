@@ -262,3 +262,10 @@ html {
   background: rgba(249, 115, 22, 0.3);
   color: white;
 }
+
+/* Hide status indicators on mobile and tablet devices */
+@media (max-width: 1023px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+}
