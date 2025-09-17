@@ -54,6 +54,14 @@ code {
   .animate-bounce-subtle {
     animation: bounceSubtle 3s ease-in-out infinite;
   }
+  
+  .animate-splatter {
+    animation: splatter 0.8s ease-out forwards;
+  }
+  
+  .animate-success-zoom {
+    animation: successZoom 1s ease-out;
+  }
 }
 
 @keyframes float {
@@ -61,7 +69,7 @@ code {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-15px);
   }
 }
 
@@ -132,6 +140,36 @@ code {
   }
   50% {
     transform: translateY(-5px);
+  }
+}
+
+@keyframes splatter {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 0.7;
+  }
+}
+
+@keyframes successZoom {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
@@ -267,5 +305,30 @@ html {
 @media (max-width: 1023px) {
   .mobile-hidden {
     display: none !important;
+  }
+}
+
+/* Success screen containment */
+.success-screen-container {
+  overflow: hidden;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.success-screen-container * {
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
+/* Ensure no elements go beyond viewport boundaries */
+.success-screen-container .absolute {
+  contain: layout;
+}
+
+/* Prevent text overflow on small screens */
+@media (max-width: 640px) {
+  .success-screen-container {
+    padding: 1rem;
   }
 }

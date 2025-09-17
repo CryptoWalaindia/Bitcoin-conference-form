@@ -1,9 +1,154 @@
 import React, { useMemo, useState, useEffect } from "react";
-import logoSvg from "../poioi.png";
+import logoSvg from "../2.png";
 import { submitRegistration, type RegistrationData } from "./lib/supabase";
 
 // Single-file React page for a clean, modern registration form with interactive background
 // Tailwind CSS is assumed to be available. Default export renders the whole page.
+
+// Success Screen Component
+function SuccessScreen() {
+  const [splatterParticles, setSplatterParticles] = useState<Array<{x: number, y: number, delay: number, size: number, colorClass: string}>>([]);
+
+  useEffect(() => {
+    // Generate splatter particles with predefined color classes
+    const colorClasses = [
+      'bg-orange-500/60',
+      'bg-yellow-500/60', 
+      'bg-green-500/60',
+      'bg-blue-500/60',
+      'bg-purple-500/60',
+      'bg-red-500/60',
+      'bg-pink-500/60',
+      'bg-indigo-500/60'
+    ];
+    
+    const particles = [...Array(50)].map(() => ({
+      x: 5 + Math.random() * 90, // Keep particles between 5% and 95% to avoid edges
+      y: 5 + Math.random() * 90, // Keep particles between 5% and 95% to avoid edges
+      delay: Math.random() * 2,
+      size: 2 + Math.random() * 8,
+      colorClass: colorClasses[Math.floor(Math.random() * colorClasses.length)]
+    }));
+    setSplatterParticles(particles);
+  }, []);
+
+  return (
+    <div className="min-h-screen w-full relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-white flex items-center justify-center success-screen-container">
+      {/* Animated Background Elements */}
+      <BackgroundElements />
+      
+      {/* Splatter Effect */}
+      <div className="absolute inset-0 overflow-hidden">
+        {splatterParticles.map((particle, i) => (
+          <div
+            key={i}
+            className={`absolute rounded-full animate-splatter ${particle.colorClass}`}
+            style={{
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              animationDelay: `${particle.delay}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Success Content */}
+      <div className="relative z-10 text-center max-w-4xl mx-auto px-6 py-8 animate-success-zoom">
+        {/* Large Success Icon */}
+        <div className="mb-8">
+          <div className="text-8xl md:text-9xl mb-4 animate-bounce">🎉</div>
+          <div className="flex items-center justify-center gap-4 text-6xl md:text-7xl animate-pulse">
+            <span>✨</span>
+            <span>🚀</span>
+            <span>🎊</span>
+          </div>
+        </div>
+
+        {/* Success Message */}
+        <div className="mb-8">
+          <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-yellow-400 to-green-400 mb-6 animate-pulse">
+            SUCCESS!
+          </h1>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">
+            You've Successfully Registered!
+          </h2>
+          <div className="text-lg md:text-xl text-neutral-200 leading-relaxed max-w-3xl mx-auto">
+            <p className="mb-4">
+              🎊 <strong className="text-orange-400">Congratulations!</strong> You now have a chance to get a 
+              <strong className="text-green-400"> FREE TICKET</strong> to the 
+              <strong className="text-yellow-400"> First Bitcoin Conference in India!</strong>
+            </p>
+            <p className="text-base text-neutral-300">
+              We'll be in touch soon with more details about your registration and the exciting opportunities ahead.
+            </p>
+          </div>
+        </div>
+
+        {/* Additional Success Elements */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="p-6 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 backdrop-blur-sm">
+            <div className="text-3xl mb-2">📧</div>
+            <h3 className="font-bold text-green-400 mb-1">Confirmation Sent</h3>
+            <p className="text-sm text-neutral-300">Check your email for details</p>
+          </div>
+          <div className="p-6 rounded-xl bg-gradient-to-br from-orange-500/20 to-yellow-500/20 border border-orange-500/30 backdrop-blur-sm">
+            <div className="text-3xl mb-2">🎫</div>
+            <h3 className="font-bold text-orange-400 mb-1">Free Ticket Chance</h3>
+            <p className="text-sm text-neutral-300">You're in the running!</p>
+          </div>
+          <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-500/30 backdrop-blur-sm">
+            <div className="text-3xl mb-2">🚀</div>
+            <h3 className="font-bold text-purple-400 mb-1">Stay Tuned</h3>
+            <p className="text-sm text-neutral-300">More updates coming soon</p>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <div className="mb-8">
+          <button
+            onClick={() => window.location.reload()}
+            className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 text-white font-bold rounded-xl shadow-lg shadow-orange-500/30 transition-all duration-300 hover:scale-105 active:scale-95 text-lg"
+          >
+            🎯 Register Another Person
+          </button>
+        </div>
+
+        {/* Bitcoin Conference Branding */}
+        <div className="flex items-center justify-center gap-4 text-neutral-400 pb-8">
+          <div className="w-8 h-8">
+            <img 
+              src={logoSvg} 
+              alt="Bitcoin Conference India" 
+              className="w-full h-full object-contain filter drop-shadow-lg"
+            />
+          </div>
+          <span className="text-lg font-semibold">Bitcoin Conference India</span>
+        </div>
+      </div>
+
+      {/* Floating Bitcoin Symbols - Positioned safely within viewport */}
+      <div className="absolute inset-0 pointer-events-none hidden lg:block">
+        <div className="absolute top-32 left-16 text-5xl text-orange-500/20 font-bold animate-float">₿</div>
+        <div className="absolute top-56 right-16 text-4xl text-yellow-500/20 font-bold animate-bounce" style={{ animationDelay: '1s' }}>₿</div>
+        <div className="absolute bottom-40 left-16 text-6xl text-green-500/20 font-bold animate-pulse" style={{ animationDelay: '2s' }}>₿</div>
+        <div className="absolute bottom-56 right-16 text-3xl text-blue-500/20 font-bold animate-float" style={{ animationDelay: '3s' }}>₿</div>
+      </div>
+
+      {/* Confetti Elements - Positioned safely within viewport */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-1/4 text-2xl md:text-3xl animate-bounce" style={{ animationDelay: '0.5s' }}>🎊</div>
+        <div className="absolute top-28 right-1/3 text-xl md:text-2xl animate-pulse" style={{ animationDelay: '1.2s' }}>✨</div>
+        <div className="absolute top-48 left-1/5 text-3xl md:text-4xl animate-float" style={{ animationDelay: '0.8s' }}>🎉</div>
+        <div className="absolute bottom-48 right-1/4 text-2xl md:text-3xl animate-bounce" style={{ animationDelay: '1.5s' }}>🚀</div>
+        <div className="absolute bottom-40 left-1/3 text-xl md:text-2xl animate-pulse" style={{ animationDelay: '2.1s' }}>⭐</div>
+        <div className="absolute top-1/2 left-12 md:left-20 text-2xl md:text-3xl animate-float" style={{ animationDelay: '1.8s' }}>🎈</div>
+        <div className="absolute top-1/3 right-12 md:right-20 text-xl md:text-2xl animate-bounce" style={{ animationDelay: '0.3s' }}>🎁</div>
+      </div>
+    </div>
+  );
+}
 
 export default function BitcoinConferenceIndiaForm() {
   const [form, setForm] = useState({
@@ -164,6 +309,11 @@ export default function BitcoinConferenceIndiaForm() {
     }
   }
 
+  // Show success screen if form is submitted
+  if (submitted) {
+    return <SuccessScreen />;
+  }
+
   return (
     <div className="min-h-screen w-full relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-white">
       {/* Animated Background Elements */}
@@ -200,7 +350,7 @@ export default function BitcoinConferenceIndiaForm() {
             
             {/* Title and subtitle with enhanced styling */}
             <div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white drop-shadow-lg">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white drop-shadow-lg whitespace-nowrap">
                 Bitcoin Conference India
               </h1>
               {/* ✅ RECONNECTED GITHUB - Mobile status should now be hidden on mobile! */}
@@ -238,7 +388,7 @@ export default function BitcoinConferenceIndiaForm() {
               <span className="text-2xl animate-bounce" style={{ animationDelay: '0.5s' }}>🔥</span>
             </div>
             <p className="text-sm text-white mb-2">
-              Register in the next <span className="font-bold text-orange-400">24 hours</span> and get:
+              Register now and get a chance to win :
             </p>
             <div className="flex items-center justify-center gap-6 text-sm text-neutral-300">
               <span className="flex items-center gap-1">
@@ -317,7 +467,7 @@ export default function BitcoinConferenceIndiaForm() {
                     onChange={(e) => updateField("firstName", e.target.value)}
                     onFocus={() => setFocusedField("firstName")}
                     onBlur={() => setFocusedField(null)}
-                    placeholder="e.g., Abrar"
+                    placeholder="e.g., Satoshi"
                     className={twInput(errors.firstName, focusedField === "firstName" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
                   />
                   {errors.firstName && <p className="mt-1 text-sm text-red-400">{errors.firstName}</p>}
@@ -337,7 +487,7 @@ export default function BitcoinConferenceIndiaForm() {
                     onChange={(e) => updateField("lastName", e.target.value)}
                     onFocus={() => setFocusedField("lastName")}
                     onBlur={() => setFocusedField(null)}
-                    placeholder="e.g., Khan"
+                    placeholder="e.g., Nakamoto"
                     className={twInput(errors.lastName, focusedField === "lastName" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
                   />
                   {errors.lastName && <p className="mt-1 text-sm text-red-400">{errors.lastName}</p>}
@@ -359,7 +509,7 @@ export default function BitcoinConferenceIndiaForm() {
                       onChange={(e) => updateField("phone", e.target.value.replace(/[^\d]/g, ""))}
                       onFocus={() => setFocusedField("phone")}
                       onBlur={() => setFocusedField(null)}
-                      placeholder="9876543210"
+                      placeholder="1112223334"
                       className={twInput(errors.phone, `pl-12 ${focusedField === "phone" ? "ring-2 ring-orange-500/60 border-orange-500/40" : ""}`)}
                     />
                   </div>
@@ -509,7 +659,7 @@ export default function BitcoinConferenceIndiaForm() {
                     
                     <button
                       type="button"
-                      className="rounded-xl px-4 py-4 text-sm border border-white/15 hover:bg-white/5 hover:border-white/25 transition-all duration-300 hover:scale-105 active:scale-95"
+                      className="rounded-xl px-4 py-4 text-sm bg-gradient-to-r from-gray-600/20 to-gray-700/20 border border-gray-500/30 hover:from-gray-500/30 hover:to-gray-600/30 hover:border-gray-400/50 text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 backdrop-blur-sm shadow-lg hover:shadow-gray-500/20"
                       onClick={() => {
                         setForm({ firstName: "", lastName: "", phone: "", email: "", age: "", gender: "", state: "", purpose: "" });
                         setErrors({});
@@ -517,7 +667,7 @@ export default function BitcoinConferenceIndiaForm() {
                         setSubmitted(false);
                       }}
                     >
-                      🔄 Reset
+                      🔄 Reset Form
                     </button>
                   </div>
                   
@@ -529,37 +679,9 @@ export default function BitcoinConferenceIndiaForm() {
                   )}
                 </div>
 
-                {serverMessage && (
+                {serverMessage && !submitted && (
                   <div className="sm:col-span-2 mt-4 text-sm text-neutral-200">
                     {serverMessage}
-                  </div>
-                )}
-
-                {submitted && (
-                  <div className="sm:col-span-2 mt-4 rounded-xl border border-green-400/30 bg-gradient-to-r from-green-400/10 via-emerald-400/10 to-green-400/10 p-6 text-sm animate-fade-in shadow-lg shadow-green-500/20">
-                    <div className="text-center">
-                      <div className="text-4xl mb-2 animate-bounce">🎉</div>
-                      <h3 className="text-lg font-bold text-green-400 mb-2">
-                        🚀 Registration Successful!
-                      </h3>
-                      <p className="text-neutral-200 mb-3">
-                        Congratulations! You've secured your spot at Bitcoin Conference India.
-                      </p>
-                      <div className="flex items-center justify-center gap-4 text-xs text-neutral-400">
-                        <div className="flex items-center gap-1">
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
-                          <span>Confirmation sent</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span>📧</span>
-                          <span>Check your email</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span>🎫</span>
-                          <span>Ticket details coming</span>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 )}
               </form>
@@ -581,7 +703,7 @@ function FooterNote() {
     <div className="max-w-4xl mx-auto">
       <div className="px-2 sm:px-0">
         {/* Enhanced testimonials/social proof section */}
-        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-white/5 via-white/10 to-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
+        <div className="hidden sm:block mt-6 p-4 rounded-xl bg-gradient-to-r from-white/5 via-white/10 to-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
           <div className="text-center mb-4">
             <h3 className="text-sm font-semibold text-orange-300 mb-2">🌟 Join Industry Leaders</h3>
             <div className="flex items-center justify-center gap-6 text-xs text-neutral-400">
@@ -601,47 +723,26 @@ function FooterNote() {
           </div>
           
           {/* Main footer content */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="text-xs text-neutral-400">
+          <div className="text-center mb-4">
+            <div className="text-sm text-neutral-400">
               By registering, you agree to receive event updates. We respect your privacy.
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-neutral-400">256-bit Encrypted</span>
             </div>
           </div>
           
-          {/* Enhanced social proof indicators */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 text-xs text-neutral-500">
-              <div className="flex items-center gap-1 hover:text-green-400 transition-colors duration-300">
-                <span>🔒</span>
-                <span>Bank-Grade Security</span>
-              </div>
-              <div className="flex items-center gap-1 hover:text-blue-400 transition-colors duration-300">
-                <span>⚡</span>
-                <span>Instant Confirmation</span>
-              </div>
-              <div className="flex items-center gap-1 hover:text-purple-400 transition-colors duration-300">
-                <span>🎯</span>
-                <span>Zero Spam Guarantee</span>
-              </div>
-              <div className="flex items-center gap-1 hover:text-orange-400 transition-colors duration-300">
-                <span>🏆</span>
-                <span>Premium Experience</span>
-              </div>
-            </div>
-            
-            {/* Footer logo with enhanced styling */}
-            <div className="flex items-center gap-2">
-              <div className="logo-container w-6 h-6 opacity-60 hover:opacity-100 transition-opacity duration-300">
+          {/* All badges and logo in one line */}
+          <div className="flex items-center justify-center gap-4 text-xs text-neutral-500">
+            <span className="flex items-center gap-1">🔒 Secure</span>
+            <span className="flex items-center gap-1">⚡ Instant</span>
+            <span className="flex items-center gap-1">🎯 No Spam</span>
+            <div className="flex items-center gap-2 opacity-60">
+              <div className="logo-container w-4 h-4">
                 <img 
                   src={logoSvg} 
                   alt="Bitcoin Conference India" 
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-xs text-neutral-500 hover:text-orange-400 transition-colors duration-300">Bitcoin Conference India</span>
+              <span>Bitcoin Conference India</span>
             </div>
           </div>
           
@@ -690,24 +791,7 @@ function FloatingHelpButton() {
               <span>Submit to secure your seat</span>
             </div>
           </div>
-          
-          <div className="border-t border-white/10 pt-3">
-            <p className="text-xs text-neutral-400 mb-2 font-semibold">Need assistance?</p>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs text-neutral-400 hover:text-orange-300 transition-colors duration-300">
-                <span>📧</span>
-                <span>support@bitcoinconference.in</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-neutral-400 hover:text-orange-300 transition-colors duration-300">
-                <span>📞</span>
-                <span>+91 98765 43210</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-neutral-400 hover:text-orange-300 transition-colors duration-300">
-                <span>💬</span>
-                <span>Live chat available 24/7</span>
-              </div>
-            </div>
-          </div>
+
         </div>
       )}
       
@@ -818,29 +902,29 @@ function BackgroundElements() {
         }}
       />
 
-      {/* Bitcoin B Symbols - Clean placement in specific locations */}
+      {/* Bitcoin B Symbols - Clean placement in specific locations - Hidden on mobile */}
       {/* Right side symbols */}
-      <div className="absolute top-20 right-20 text-5xl text-orange-500/8 font-bold select-none pointer-events-none animate-float" style={{ animationDelay: '1s' }}>
+      <div className="absolute top-20 right-20 text-5xl text-orange-500/8 font-bold select-none pointer-events-none animate-float mobile-hidden" style={{ animationDelay: '1s' }}>
         ₿
       </div>
-      <div className="absolute top-1/2 right-8 text-4xl text-orange-500/6 font-bold select-none pointer-events-none animate-pulse" style={{ animationDelay: '2s' }}>
+      <div className="absolute top-1/2 right-8 text-4xl text-orange-500/6 font-bold select-none pointer-events-none animate-pulse mobile-hidden" style={{ animationDelay: '2s' }}>
         ₿
       </div>
-      <div className="absolute bottom-20 right-20 text-6xl text-orange-500/7 font-bold select-none pointer-events-none animate-float" style={{ animationDelay: '3s' }}>
+      <div className="absolute bottom-20 right-20 text-6xl text-orange-500/7 font-bold select-none pointer-events-none animate-float mobile-hidden" style={{ animationDelay: '3s' }}>
         ₿
       </div>
-      <div className="absolute bottom-32 left-20 text-5xl text-orange-500/5 font-bold select-none pointer-events-none animate-pulse" style={{ animationDelay: '4s' }}>
+      <div className="absolute bottom-32 left-20 text-5xl text-orange-500/5 font-bold select-none pointer-events-none animate-pulse mobile-hidden" style={{ animationDelay: '4s' }}>
         ₿
       </div>
       
       {/* Left side symbols for balance */}
-      <div className="absolute top-20 left-20 text-4xl text-orange-500/7 font-bold select-none pointer-events-none animate-pulse" style={{ animationDelay: '1.5s' }}>
+      <div className="absolute top-20 left-20 text-4xl text-orange-500/7 font-bold select-none pointer-events-none animate-pulse mobile-hidden" style={{ animationDelay: '1.5s' }}>
         ₿
       </div>
-      <div className="absolute top-1/3 left-8 text-5xl text-orange-500/6 font-bold select-none pointer-events-none animate-float" style={{ animationDelay: '2.5s' }}>
+      <div className="absolute top-1/3 left-8 text-5xl text-orange-500/6 font-bold select-none pointer-events-none animate-float mobile-hidden" style={{ animationDelay: '2.5s' }}>
         ₿
       </div>
-      <div className="absolute top-2/3 left-12 text-6xl text-orange-500/5 font-bold select-none pointer-events-none animate-pulse" style={{ animationDelay: '3.5s' }}>
+      <div className="absolute top-2/3 left-12 text-6xl text-orange-500/5 font-bold select-none pointer-events-none animate-pulse mobile-hidden" style={{ animationDelay: '3.5s' }}>
         ₿
       </div>
       
