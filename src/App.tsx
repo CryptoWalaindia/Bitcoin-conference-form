@@ -327,65 +327,21 @@ export default function BitcoinConferenceIndiaForm() {
       </div>
       
       <header className="relative z-10 max-w-4xl mx-auto px-4 pt-8 pb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6 animate-float">
-            {/* Logo with enhanced glow */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-orange-500/20 rounded-full blur-xl animate-pulse"></div>
-              <img 
-                src={logoSvg} 
-                alt="Bitcoin Logo" 
-                className="relative h-24 w-24 object-contain filter drop-shadow-lg hover:drop-shadow-xl transition-all duration-300 hover:scale-110"
-                onError={(e) => {
-                  // Fallback to Bitcoin symbol if logo fails to load
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  const fallback = document.createElement('span');
-                  fallback.textContent = '₿';
-                  fallback.className = 'text-4xl text-orange-400 font-bold flex items-center justify-center w-full h-full';
-                  target.parentElement?.appendChild(fallback);
-                }}
-              />
-            </div>
-            
-            {/* Title and subtitle with enhanced styling */}
-            <div>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white drop-shadow-lg whitespace-nowrap">
-                Bitcoin Conference India
-              </h1>
-              {/* ✅ RECONNECTED GITHUB - Mobile status should now be hidden on mobile! */}
-              <div className="flex items-center gap-2 mt-2">
-                <span className="px-3 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-semibold rounded-full animate-pulse">
-                  🔥 LIMITED SEATS
-                </span>
-                <span className="px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-semibold rounded-full">
-                  ✨ EARLY BIRD
-                </span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Enhanced Status Indicator with countdown - Hidden on mobile */}
-          <div className="flex flex-col items-end gap-2 mobile-hidden">
-            <div className="flex items-center gap-2 text-xs text-neutral-400">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span>Registration Live</span>
-            </div>
-            <div className="text-xs text-orange-400 font-semibold animate-pulse">
-              ⏰ Closing Soon!
-            </div>
-          </div>
+        <div className="flex justify-center">
+          <img 
+            src="/jkl.png" 
+            alt="Bitcoin Conference India Header" 
+            className="max-w-full h-auto object-contain filter drop-shadow-lg"
+          />
         </div>
       </header>
 
       <main className="relative z-10 px-4 pb-24">
         <div className="max-w-4xl mx-auto">
           {/* Compelling announcement banner */}
-          <div className="mb-6 p-4 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl text-center animate-pulse-glow">
+          <div className="mb-6 p-4 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <span className="text-2xl animate-bounce">🔥</span>
               <h3 className="text-lg font-bold text-orange-300">EXCLUSIVE EARLY BIRD OFFER</h3>
-              <span className="text-2xl animate-bounce" style={{ animationDelay: '0.5s' }}>🔥</span>
             </div>
             <p className="text-sm text-white mb-2">
               Register now and get a chance to win :
@@ -416,7 +372,7 @@ export default function BitcoinConferenceIndiaForm() {
               />
             </div>
             
-            <div className="relative p-6 sm:p-10">
+            <div className="relative p-6 sm:p-10 z-10">
               <div className="animate-slide-up">
 
                 
@@ -441,7 +397,7 @@ export default function BitcoinConferenceIndiaForm() {
                   </div>
                   {completionPercentage < 100 && (
                     <p className="text-xs text-neutral-500 mt-1 text-center">
-                      {completionPercentage < 50 ? "🔥 You're doing great! Keep going..." : "🎉 Almost there! Just a few more fields..."}
+                      {completionPercentage < 50 ? "You're doing great! Keep going..." : "🎉 Almost there! Just a few more fields..."}
                     </p>
                   )}
                   {completionPercentage === 100 && (
@@ -657,18 +613,7 @@ export default function BitcoinConferenceIndiaForm() {
                       </span>
                     </button>
                     
-                    <button
-                      type="button"
-                      className="rounded-xl px-4 py-4 text-sm bg-gradient-to-r from-gray-600/20 to-gray-700/20 border border-gray-500/30 hover:from-gray-500/30 hover:to-gray-600/30 hover:border-gray-400/50 text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 backdrop-blur-sm shadow-lg hover:shadow-gray-500/20"
-                      onClick={() => {
-                        setForm({ firstName: "", lastName: "", phone: "", email: "", age: "", gender: "", state: "", purpose: "" });
-                        setErrors({});
-                        setServerMessage("");
-                        setSubmitted(false);
-                      }}
-                    >
-                      🔄 Reset Form
-                    </button>
+
                   </div>
                   
                   {/* Additional motivation text */}
@@ -700,63 +645,33 @@ export default function BitcoinConferenceIndiaForm() {
 
 function FooterNote() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="px-2 sm:px-0">
-        {/* Enhanced testimonials/social proof section */}
-        <div className="hidden sm:block mt-6 p-4 rounded-xl bg-gradient-to-r from-white/5 via-white/10 to-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
-          <div className="text-center mb-4">
-            <h3 className="text-sm font-semibold text-orange-300 mb-2">🌟 Join Industry Leaders</h3>
-            <div className="flex items-center justify-center gap-6 text-xs text-neutral-400">
-              <div className="flex items-center gap-1">
-                <span className="text-blue-400">💼</span>
-                <span>CEOs & Founders</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-green-400">🏦</span>
-                <span>Banking Executives</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-purple-400">🚀</span>
-                <span>Crypto Innovators</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Main footer content */}
-          <div className="text-center mb-4">
-            <div className="text-sm text-neutral-400">
-              By registering, you agree to receive event updates. We respect your privacy.
-            </div>
-          </div>
-          
-          {/* All badges and logo in one line */}
-          <div className="flex items-center justify-center gap-4 text-xs text-neutral-500">
-            <span className="flex items-center gap-1">🔒 Secure</span>
-            <span className="flex items-center gap-1">⚡ Instant</span>
-            <span className="flex items-center gap-1">🎯 No Spam</span>
-            <div className="flex items-center gap-2 opacity-60">
-              <div className="logo-container w-4 h-4">
-                <img 
-                  src={logoSvg} 
-                  alt="Bitcoin Conference India" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <span>Bitcoin Conference India</span>
-            </div>
-          </div>
-          
-          {/* Additional trust indicators */}
-          <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-center gap-6 text-xs text-neutral-600">
-            <span className="flex items-center gap-1">
-              <span className="text-yellow-400">⭐</span>
-              <span>Rated 4.9/5 by attendees</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="text-red-400">❤️</span>
-              <span>Loved by 1000+ participants</span>
-            </span>
-          </div>
+    <div className="max-w-4xl mx-auto mt-8 mb-4">
+      <div className="text-center">
+        {/* Copyright text */}
+        <p className="text-neutral-400 text-sm mb-4">
+          © 2025 Bitcoinconferenceindia. All rights reserved.
+        </p>
+        
+        {/* Social media icons */}
+        <div className="flex items-center justify-center gap-4">
+          <a 
+            href="https://x.com/btcconfIND?t=A_WikWk9MxG2ZyOrh3CZTQ&s=08" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-12 h-12 rounded-full border border-white/20 bg-black/40 backdrop-blur-sm flex items-center justify-center hover:border-white/40 hover:bg-black/60 transition-all duration-300 hover:scale-110"
+          >
+            <span className="text-white text-lg font-bold">𝕏</span>
+          </a>
+          <a 
+            href="https://www.instagram.com/btcconfind?igsh=MTgyenZodHFvdDkzeA==" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-12 h-12 rounded-full border border-white/20 bg-black/40 backdrop-blur-sm flex items-center justify-center hover:border-white/40 hover:bg-black/60 transition-all duration-300 hover:scale-110"
+          >
+            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
         </div>
       </div>
     </div>
