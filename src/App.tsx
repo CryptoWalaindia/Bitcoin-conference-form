@@ -326,12 +326,12 @@ export default function BitcoinConferenceIndiaForm() {
         }}></div>
       </div>
       
-      <header className="relative z-10 max-w-4xl mx-auto px-4 pt-8 pb-4">
-        <div className="flex justify-center">
+      <header className="relative z-10 px-4 pt-8 pb-4">
+        <div className="max-w-4xl mx-auto">
           <img 
             src="/jkl.png" 
             alt="Bitcoin Conference India Header" 
-            className="max-w-full h-auto object-contain filter drop-shadow-lg"
+            className="w-full h-auto object-contain filter drop-shadow-lg rounded-2xl"
           />
         </div>
       </header>
