@@ -7,126 +7,84 @@ import { submitRegistration, type RegistrationData } from "./lib/supabase";
 
 // Success Screen Component
 function SuccessScreen() {
-  const [splatterParticles, setSplatterParticles] = useState<Array<{x: number, y: number, delay: number, size: number, colorClass: string}>>([]);
-
-  useEffect(() => {
-    // Generate splatter particles with predefined color classes
-    const colorClasses = [
-      'bg-orange-500/60',
-      'bg-yellow-500/60', 
-      'bg-green-500/60',
-      'bg-blue-500/60',
-      'bg-purple-500/60',
-      'bg-red-500/60',
-      'bg-pink-500/60',
-      'bg-indigo-500/60'
-    ];
-    
-    const particles = [...Array(50)].map(() => ({
-      x: 5 + Math.random() * 90, // Keep particles between 5% and 95% to avoid edges
-      y: 5 + Math.random() * 90, // Keep particles between 5% and 95% to avoid edges
-      delay: Math.random() * 2,
-      size: 2 + Math.random() * 8,
-      colorClass: colorClasses[Math.floor(Math.random() * colorClasses.length)]
-    }));
-    setSplatterParticles(particles);
-  }, []);
-
   return (
-    <div className="min-h-screen w-full relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-white flex items-center justify-center success-screen-container">
+    <div className="min-h-screen w-full relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-white">
       {/* Animated Background Elements */}
       <BackgroundElements />
       
-      {/* Splatter Effect */}
-      <div className="absolute inset-0 overflow-hidden">
-        {splatterParticles.map((particle, i) => (
-          <div
-            key={i}
-            className={`absolute rounded-full animate-splatter ${particle.colorClass}`}
-            style={{
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-              animationDelay: `${particle.delay}s`,
-            }}
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 opacity-50">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}></div>
+      </div>
+      
+      <header className="relative z-10 px-4 pt-8 pb-4">
+        <div className="max-w-4xl mx-auto">
+          <img 
+            src="/jkl.png" 
+            alt="Bitcoin Conference India Header" 
+            className="w-full h-auto object-contain filter drop-shadow-lg rounded-2xl"
           />
-        ))}
-      </div>
+        </div>
+      </header>
 
-      {/* Success Content */}
-      <div className="relative z-10 text-center max-w-4xl mx-auto px-6 py-8 animate-success-zoom">
-        {/* Large Success Icon */}
-        <div className="mb-8">
-          <div className="text-8xl md:text-9xl mb-4 animate-bounce">🎉</div>
-          <div className="flex items-center justify-center gap-4 text-6xl md:text-7xl animate-pulse">
-            <span>✨</span>
-            <span>🚀</span>
-            <span>🎊</span>
+      <main className="relative z-10 px-4 pb-24 flex items-center justify-center">
+        {/* Success Content */}
+        <div className="text-center max-w-2xl mx-auto px-6 py-8">
+          {/* Success Message */}
+          <div className="mb-8">
+            <div className="text-base md:text-lg text-neutral-300 leading-relaxed max-w-xl mx-auto">
+              <p className="mb-4">
+                Your registration has been submitted successfully. You now have a chance to get a 
+                <strong className="text-orange-400"> free ticket</strong> to the 
+                <strong className="text-orange-400"> Bitcoin Conference in India</strong>.
+              </p>
+              <p className="text-sm text-neutral-400">
+                We'll be in touch soon with more details about your registration.
+              </p>
+            </div>
+          </div>
+
+          {/* Information Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
+              <h3 className="font-semibold text-neutral-200 mb-1">Confirmation Sent</h3>
+              <p className="text-sm text-neutral-400">Check your email for details</p>
+            </div>
+            <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
+              <h3 className="font-semibold text-neutral-200 mb-1">Free Ticket Chance</h3>
+              <p className="text-sm text-neutral-400">You're in the running</p>
+            </div>
+            <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
+              <h3 className="font-semibold text-neutral-200 mb-1">Stay Tuned</h3>
+              <p className="text-sm text-neutral-400">More updates coming soon</p>
+            </div>
+          </div>
+
+          {/* Action Button */}
+          <div className="mb-8">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors duration-200"
+            >
+              Register Another Person
+            </button>
+          </div>
+
+          {/* Bitcoin Conference Branding */}
+          <div className="flex items-center justify-center gap-3 text-neutral-400">
+            <div className="w-6 h-6">
+              <img 
+                src={logoSvg} 
+                alt="Bitcoin Conference India" 
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <span className="text-base font-medium">Bitcoin Conference India</span>
           </div>
         </div>
-
-        {/* Success Message */}
-        <div className="mb-8">
-          <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-yellow-400 to-green-400 mb-6 animate-pulse">
-            SUCCESS!
-          </h1>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">
-            You've Successfully Registered!
-          </h2>
-          <div className="text-lg md:text-xl text-neutral-200 leading-relaxed max-w-3xl mx-auto">
-            <p className="mb-4">
-              🎊 <strong className="text-orange-400">Congratulations!</strong> You now have a chance to get a 
-              <strong className="text-green-400"> FREE TICKET</strong> to the 
-              <strong className="text-yellow-400"> First Bitcoin Conference in India!</strong>
-            </p>
-            <p className="text-base text-neutral-300">
-              We'll be in touch soon with more details about your registration and the exciting opportunities ahead.
-            </p>
-          </div>
-        </div>
-
-        {/* Additional Success Elements */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="p-6 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 backdrop-blur-sm">
-            <div className="text-3xl mb-2">📧</div>
-            <h3 className="font-bold text-green-400 mb-1">Confirmation Sent</h3>
-            <p className="text-sm text-neutral-300">Check your email for details</p>
-          </div>
-          <div className="p-6 rounded-xl bg-gradient-to-br from-orange-500/20 to-yellow-500/20 border border-orange-500/30 backdrop-blur-sm">
-            <div className="text-3xl mb-2">🎫</div>
-            <h3 className="font-bold text-orange-400 mb-1">Free Ticket Chance</h3>
-            <p className="text-sm text-neutral-300">You're in the running!</p>
-          </div>
-          <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-500/30 backdrop-blur-sm">
-            <div className="text-3xl mb-2">🚀</div>
-            <h3 className="font-bold text-purple-400 mb-1">Stay Tuned</h3>
-            <p className="text-sm text-neutral-300">More updates coming soon</p>
-          </div>
-        </div>
-
-        {/* Action Button */}
-        <div className="mb-8">
-          <button
-            onClick={() => window.location.reload()}
-            className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 text-white font-bold rounded-xl shadow-lg shadow-orange-500/30 transition-all duration-300 hover:scale-105 active:scale-95 text-lg"
-          >
-            🎯 Register Another Person
-          </button>
-        </div>
-
-        {/* Bitcoin Conference Branding */}
-        <div className="flex items-center justify-center gap-4 text-neutral-400 pb-8">
-          <div className="w-8 h-8">
-            <img 
-              src={logoSvg} 
-              alt="Bitcoin Conference India" 
-              className="w-full h-full object-contain filter drop-shadow-lg"
-            />
-          </div>
-          <span className="text-lg font-semibold">Bitcoin Conference India</span>
-        </div>
-      </div>
+      </main>
 
       {/* Floating Bitcoin Symbols - Positioned safely within viewport */}
       <div className="absolute inset-0 pointer-events-none hidden lg:block">
@@ -134,17 +92,6 @@ function SuccessScreen() {
         <div className="absolute top-56 right-16 text-4xl text-yellow-500/20 font-bold animate-bounce" style={{ animationDelay: '1s' }}>₿</div>
         <div className="absolute bottom-40 left-16 text-6xl text-green-500/20 font-bold animate-pulse" style={{ animationDelay: '2s' }}>₿</div>
         <div className="absolute bottom-56 right-16 text-3xl text-blue-500/20 font-bold animate-float" style={{ animationDelay: '3s' }}>₿</div>
-      </div>
-
-      {/* Confetti Elements - Positioned safely within viewport */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 left-1/4 text-2xl md:text-3xl animate-bounce" style={{ animationDelay: '0.5s' }}>🎊</div>
-        <div className="absolute top-28 right-1/3 text-xl md:text-2xl animate-pulse" style={{ animationDelay: '1.2s' }}>✨</div>
-        <div className="absolute top-48 left-1/5 text-3xl md:text-4xl animate-float" style={{ animationDelay: '0.8s' }}>🎉</div>
-        <div className="absolute bottom-48 right-1/4 text-2xl md:text-3xl animate-bounce" style={{ animationDelay: '1.5s' }}>🚀</div>
-        <div className="absolute bottom-40 left-1/3 text-xl md:text-2xl animate-pulse" style={{ animationDelay: '2.1s' }}>⭐</div>
-        <div className="absolute top-1/2 left-12 md:left-20 text-2xl md:text-3xl animate-float" style={{ animationDelay: '1.8s' }}>🎈</div>
-        <div className="absolute top-1/3 right-12 md:right-20 text-xl md:text-2xl animate-bounce" style={{ animationDelay: '0.3s' }}>🎁</div>
       </div>
     </div>
   );
