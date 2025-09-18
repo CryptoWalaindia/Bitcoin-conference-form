@@ -101,11 +101,12 @@ export default function BitcoinConferenceIndiaForm() {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
+    countryCode: "+91", // Default to India
     phone: "",
     email: "",
     age: "",
     gender: "",
-    state: "",
+    country: "",
     purpose: "",
   });
 
@@ -115,53 +116,74 @@ export default function BitcoinConferenceIndiaForm() {
   const [serverMessage, setServerMessage] = useState("");
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  // Calculate form completion percentage
+  // Calculate form completion percentage (phone is optional)
   const completionPercentage = useMemo(() => {
-    const fields = Object.values(form);
-    const filledFields = fields.filter((field: string) => field.trim() !== "").length;
-    return Math.round((filledFields / fields.length) * 100);
+    const requiredFields = [form.firstName, form.lastName, form.email, form.age, form.gender, form.country, form.purpose];
+    const filledFields = requiredFields.filter((field: string) => field.trim() !== "").length;
+    return Math.round((filledFields / requiredFields.length) * 100);
   }, [form]);
 
-  const states = useMemo(
+  const countries = useMemo(
     () => [
-      // States
-      "Andhra Pradesh",
-      "Arunachal Pradesh",
-      "Assam",
-      "Bihar",
-      "Chhattisgarh",
-      "Goa",
-      "Gujarat",
-      "Haryana",
-      "Himachal Pradesh",
-      "Jharkhand",
-      "Karnataka",
-      "Kerala",
-      "Madhya Pradesh",
-      "Maharashtra",
-      "Manipur",
-      "Meghalaya",
-      "Mizoram",
-      "Nagaland",
-      "Odisha",
-      "Punjab",
-      "Rajasthan",
-      "Sikkim",
-      "Tamil Nadu",
-      "Telangana",
-      "Tripura",
-      "Uttar Pradesh",
-      "Uttarakhand",
-      "West Bengal",
-      // Union Territories
-      "Andaman and Nicobar Islands",
-      "Chandigarh",
-      "Dadra and Nagar Haveli and Daman and Diu",
-      "Delhi",
-      "Jammu and Kashmir",
-      "Ladakh",
-      "Lakshadweep",
-      "Puducherry",
+      "Afghanistan", "Albania", "Algeria", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+      "Bahrain", "Bangladesh", "Belarus", "Belgium", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Bulgaria",
+      "Cambodia", "Canada", "Chile", "China", "Colombia", "Croatia", "Czech Republic",
+      "Denmark", "Ecuador", "Egypt", "Estonia", "Ethiopia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece",
+      "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
+      "Japan", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg",
+      "Malaysia", "Mexico", "Morocco", "Nepal", "Netherlands", "New Zealand", "Nigeria", "Norway",
+      "Pakistan", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia",
+      "Saudi Arabia", "Singapore", "Slovakia", "Slovenia", "South Africa", "South Korea", "Spain", "Sri Lanka", "Sweden", "Switzerland",
+      "Taiwan", "Thailand", "Turkey", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Venezuela", "Vietnam"
+    ],
+    []
+  );
+
+  const countryCodes = useMemo(
+    () => [
+      { code: "+91", country: "India", flag: "🇮🇳" },
+      { code: "+1", country: "United States", flag: "🇺🇸" },
+      { code: "+1", country: "Canada", flag: "🇨🇦" },
+      { code: "+44", country: "United Kingdom", flag: "🇬🇧" },
+      { code: "+49", country: "Germany", flag: "🇩🇪" },
+      { code: "+33", country: "France", flag: "🇫🇷" },
+      { code: "+39", country: "Italy", flag: "🇮🇹" },
+      { code: "+34", country: "Spain", flag: "🇪🇸" },
+      { code: "+31", country: "Netherlands", flag: "🇳🇱" },
+      { code: "+41", country: "Switzerland", flag: "🇨🇭" },
+      { code: "+43", country: "Austria", flag: "🇦🇹" },
+      { code: "+46", country: "Sweden", flag: "🇸🇪" },
+      { code: "+47", country: "Norway", flag: "🇳🇴" },
+      { code: "+45", country: "Denmark", flag: "🇩🇰" },
+      { code: "+358", country: "Finland", flag: "🇫🇮" },
+      { code: "+61", country: "Australia", flag: "🇦🇺" },
+      { code: "+64", country: "New Zealand", flag: "🇳🇿" },
+      { code: "+81", country: "Japan", flag: "🇯🇵" },
+      { code: "+82", country: "South Korea", flag: "🇰🇷" },
+      { code: "+86", country: "China", flag: "🇨🇳" },
+      { code: "+65", country: "Singapore", flag: "🇸🇬" },
+      { code: "+60", country: "Malaysia", flag: "🇲🇾" },
+      { code: "+66", country: "Thailand", flag: "🇹🇭" },
+      { code: "+62", country: "Indonesia", flag: "🇮🇩" },
+      { code: "+63", country: "Philippines", flag: "🇵🇭" },
+      { code: "+84", country: "Vietnam", flag: "🇻🇳" },
+      { code: "+852", country: "Hong Kong", flag: "🇭🇰" },
+      { code: "+886", country: "Taiwan", flag: "🇹🇼" },
+      { code: "+971", country: "UAE", flag: "🇦🇪" },
+      { code: "+966", country: "Saudi Arabia", flag: "🇸🇦" },
+      { code: "+972", country: "Israel", flag: "🇮🇱" },
+      { code: "+90", country: "Turkey", flag: "🇹🇷" },
+      { code: "+7", country: "Russia", flag: "🇷🇺" },
+      { code: "+55", country: "Brazil", flag: "🇧🇷" },
+      { code: "+52", country: "Mexico", flag: "🇲🇽" },
+      { code: "+54", country: "Argentina", flag: "🇦🇷" },
+      { code: "+56", country: "Chile", flag: "🇨🇱" },
+      { code: "+57", country: "Colombia", flag: "🇨🇴" },
+      { code: "+51", country: "Peru", flag: "🇵🇪" },
+      { code: "+27", country: "South Africa", flag: "🇿🇦" },
+      { code: "+234", country: "Nigeria", flag: "🇳🇬" },
+      { code: "+254", country: "Kenya", flag: "🇰🇪" },
+      { code: "+20", country: "Egypt", flag: "🇪🇬" },
     ],
     []
   );
@@ -177,9 +199,9 @@ export default function BitcoinConferenceIndiaForm() {
     if (!form.firstName.trim()) e.firstName = "Please enter your first name";
     if (!form.lastName.trim()) e.lastName = "Please enter your last name";
 
-    // Basic India-friendly phone rule: 10 to 15 digits
-    if (!/^\d{10,15}$/.test(form.phone.trim())) {
-      e.phone = "Enter a valid phone number (10 to 15 digits)";
+    // Phone is optional, but if provided, validate format (6 to 15 digits for international compatibility)
+    if (form.phone.trim() && !/^\d{6,15}$/.test(form.phone.trim())) {
+      e.phone = "Enter a valid phone number (6 to 15 digits)";
     }
 
     // Browser does some email validation, this is a light extra check
@@ -198,7 +220,7 @@ export default function BitcoinConferenceIndiaForm() {
 
     if (!form.gender) e.gender = "Please select your gender";
 
-    if (!form.state) e.state = "Select your state";
+    if (!form.country) e.country = "Please select your country";
 
     if (!form.purpose.trim()) e.purpose = "Tell us your purpose of visit";
 
@@ -218,13 +240,17 @@ export default function BitcoinConferenceIndiaForm() {
       const registrationData: RegistrationData = {
         first_name: form.firstName.trim(),
         last_name: form.lastName.trim(),
-        phone: form.phone.trim(),
         email: form.email.trim().toLowerCase(),
         age: parseInt(form.age.trim()),
         gender: form.gender as 'Male' | 'Female' | 'Others',
-        state: form.state,
+        state: form.country,
         purpose: form.purpose.trim(),
       };
+
+      // Only include phone if provided (combine country code with phone number)
+      if (form.phone.trim()) {
+        registrationData.phone = `${form.countryCode} ${form.phone.trim()}`;
+      }
 
       // Submit to Supabase with fallbacks
       const result = await submitRegistration(registrationData);
@@ -247,7 +273,7 @@ export default function BitcoinConferenceIndiaForm() {
       }
       
       // Clear the form
-      setForm({ firstName: "", lastName: "", phone: "", email: "", age: "", gender: "", state: "", purpose: "" });
+      setForm({ firstName: "", lastName: "", countryCode: "+91", phone: "", email: "", age: "", gender: "", country: "", purpose: "" });
     } catch (err: any) {
       setServerMessage(err.message || "Could not submit right now. Please try again.");
       console.error("Error submitting form:", err);
@@ -293,15 +319,11 @@ export default function BitcoinConferenceIndiaForm() {
             <div className="flex items-center justify-center gap-6 text-sm text-neutral-300">
               <span className="flex items-center gap-1">
                 <span className="text-green-400 text-lg">✓</span>
-                <span className="font-bold text-white">FREE Conference Pass</span>
-              </span>
-              <span className="flex items-center gap-1">
-                <span className="text-blue-400 text-lg">✓</span>
-                <span className="font-bold text-white">Networking Access</span>
+                <span className="font-extrabold text-white">FREE 2 day Conference Pass</span>
               </span>
               <span className="flex items-center gap-1">
                 <span className="text-purple-400 text-lg">✓</span>
-                <span className="font-bold text-white">Exclusive Swag Kit</span>
+                <span className="font-extrabold text-white">Exclusive Swag Kit</span>
               </span>
             </div>
           </div>
@@ -395,22 +417,39 @@ export default function BitcoinConferenceIndiaForm() {
 
                 {/* Phone */}
                 <div className="group">
-                  <label htmlFor="phone" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">Phone number</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 select-none">+91</span>
+                  <label htmlFor="phone" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">
+                    Phone number <span className="text-neutral-500 text-xs">(optional)</span>
+                  </label>
+                  <div className="flex gap-3">
+                    {/* Country Code Dropdown - Small Pill */}
+                    <select
+                      value={form.countryCode}
+                      onChange={(e) => updateField("countryCode", e.target.value)}
+                      onFocus={() => setFocusedField("countryCode")}
+                      onBlur={() => setFocusedField(null)}
+                      className={`w-28 min-w-28 flex-shrink-0 text-sm px-4 py-3 rounded-xl border bg-neutral-800/50 backdrop-blur-sm text-neutral-100 placeholder-neutral-400 transition-all duration-300 hover:bg-neutral-700/50 focus:outline-none focus:bg-neutral-700/50 border-neutral-600/50 ${focusedField === "countryCode" ? "ring-2 ring-orange-500/60 border-orange-500/40" : ""}`}
+                    >
+                      {countryCodes.map((country) => (
+                        <option key={`${country.code}-${country.country}`} value={country.code} className="text-neutral-900 bg-white">
+                          {country.flag} {country.code}
+                        </option>
+                      ))}
+                    </select>
+                    
+                    {/* Phone Number Input - Large Pill */}
                     <input
                       id="phone"
                       name="phone"
                       type="tel"
                       inputMode="numeric"
-                      pattern="\d{10,15}"
+                      pattern="\d{6,15}"
                       maxLength={15}
                       value={form.phone}
                       onChange={(e) => updateField("phone", e.target.value.replace(/[^\d]/g, ""))}
                       onFocus={() => setFocusedField("phone")}
                       onBlur={() => setFocusedField(null)}
-                      placeholder="1112223334"
-                      className={twInput(errors.phone, `pl-12 ${focusedField === "phone" ? "ring-2 ring-orange-500/60 border-orange-500/40" : ""}`)}
+                      placeholder="1234567890"
+                      className={twInput(errors.phone, `flex-1 ${focusedField === "phone" ? "ring-2 ring-orange-500/60 border-orange-500/40" : ""}`)}
                     />
                   </div>
                   {errors.phone && <p className="mt-1 text-sm text-red-400">{errors.phone}</p>}
@@ -474,24 +513,24 @@ export default function BitcoinConferenceIndiaForm() {
                   {errors.gender && <p className="mt-1 text-sm text-red-400">{errors.gender}</p>}
                 </div>
 
-                {/* State */}
+                {/* Country */}
                 <div className="group">
-                  <label htmlFor="state" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">State / UT</label>
+                  <label htmlFor="country" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">Country</label>
                   <select
-                    id="state"
-                    name="state"
-                    value={form.state}
-                    onChange={(e) => updateField("state", e.target.value)}
-                    onFocus={() => setFocusedField("state")}
+                    id="country"
+                    name="country"
+                    value={form.country}
+                    onChange={(e) => updateField("country", e.target.value)}
+                    onFocus={() => setFocusedField("country")}
                     onBlur={() => setFocusedField(null)}
-                    className={twInput(errors.state, focusedField === "state" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
+                    className={twInput(errors.country, focusedField === "country" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
                   >
-                    <option value="" className="text-neutral-900 bg-white">Select</option>
-                    {states.map((s) => (
-                      <option key={s} value={s} className="text-neutral-900 bg-white">{s}</option>
+                    <option value="" className="text-neutral-900 bg-white">Select your country</option>
+                    {countries.map((country) => (
+                      <option key={country} value={country} className="text-neutral-900 bg-white">{country}</option>
                     ))}
                   </select>
-                  {errors.state && <p className="mt-1 text-sm text-red-400">{errors.state}</p>}
+                  {errors.country && <p className="mt-1 text-sm text-red-400">{errors.country}</p>}
                 </div>
 
                 {/* Purpose of visit */}
