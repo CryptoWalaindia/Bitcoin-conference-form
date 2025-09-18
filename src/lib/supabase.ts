@@ -32,7 +32,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 export interface RegistrationData {
   first_name: string
   last_name: string
-  phone: string
+  phone?: string  // Optional field
   email: string
   age: number
   gender: 'Male' | 'Female' | 'Others'

@@ -4,7 +4,7 @@
 export interface WebhookRegistrationData {
   first_name: string
   last_name: string
-  phone: string
+  phone?: string  // Optional field
   email: string
   age: number
   gender: 'Male' | 'Female' | 'Others'
@@ -52,7 +52,7 @@ export class RegistrationFallback {
       formData.append('entry.FIELD_ID_1', data.first_name)
       formData.append('entry.FIELD_ID_2', data.last_name)
       formData.append('entry.FIELD_ID_3', data.email)
-      formData.append('entry.FIELD_ID_4', data.phone)
+      formData.append('entry.FIELD_ID_4', data.phone || '')
       formData.append('entry.FIELD_ID_5', data.age.toString())
       formData.append('entry.FIELD_ID_6', data.gender)
       formData.append('entry.FIELD_ID_7', data.state)
@@ -83,7 +83,7 @@ export class RegistrationFallback {
           to_email: 'bitcoinconferenceindia@gmail.com',
           from_name: `${data.first_name} ${data.last_name}`,
           from_email: data.email,
-          phone: data.phone,
+          phone: data.phone || '',
           age: data.age,
           gender: data.gender,
           state: data.state,
@@ -117,7 +117,7 @@ export class RegistrationFallback {
       formData.append('first_name', data.first_name)
       formData.append('last_name', data.last_name)
       formData.append('email', data.email)
-      formData.append('phone', data.phone)
+      formData.append('phone', data.phone || '')
       formData.append('age', data.age.toString())
       formData.append('gender', data.gender)
       formData.append('state', data.state)
