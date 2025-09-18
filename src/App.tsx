@@ -22,7 +22,7 @@ function SuccessScreen() {
       <header className="relative z-10 px-4 pt-8 pb-4">
         <div className="max-w-4xl mx-auto">
           <img 
-            src="/1.png" 
+            src="/1.jpg" 
             alt="Bitcoin Conference India Header" 
             className="w-full h-auto object-contain filter drop-shadow-lg rounded-2xl"
           />
@@ -49,8 +49,8 @@ function SuccessScreen() {
           {/* Information Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
-              <h3 className="font-semibold text-neutral-200 mb-1">Confirmation Sent</h3>
-              <p className="text-sm text-neutral-400">Check your email for details</p>
+              <h3 className="font-semibold text-neutral-200 mb-1">Winner Selection</h3>
+              <p className="text-sm text-neutral-400">Winners will be contacted through email</p>
             </div>
             <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
               <h3 className="font-semibold text-neutral-200 mb-1">Free Ticket Chance</h3>
@@ -276,7 +276,7 @@ export default function BitcoinConferenceIndiaForm() {
       <header className="relative z-10 px-4 pt-8 pb-4">
         <div className="max-w-4xl mx-auto">
           <img 
-            src="/1.png" 
+            src="/1.jpg" 
             alt="Bitcoin Conference India Header" 
             className="w-full h-auto object-contain filter drop-shadow-lg rounded-2xl"
           />
