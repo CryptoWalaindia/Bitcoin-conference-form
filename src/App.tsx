@@ -288,11 +288,8 @@ export default function BitcoinConferenceIndiaForm() {
           {/* Compelling announcement banner */}
           <div className="mb-6 p-4 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <h3 className="text-lg font-bold text-orange-300">EXCLUSIVE EARLY BIRD OFFER</h3>
+              <h3 className="text-lg font-bold text-orange-300">Register now and get a chance to win :</h3>
             </div>
-            <p className="text-sm text-white mb-2">
-              Register now and get a chance to win :
-            </p>
             <div className="flex items-center justify-center gap-6 text-sm text-neutral-300">
               <span className="flex items-center gap-1">
                 <span className="text-green-400 text-lg">✓</span>
@@ -300,7 +297,7 @@ export default function BitcoinConferenceIndiaForm() {
               </span>
               <span className="flex items-center gap-1">
                 <span className="text-blue-400 text-lg">✓</span>
-                <span className="font-bold text-white">VIP Networking Access</span>
+                <span className="font-bold text-white">Networking Access</span>
               </span>
               <span className="flex items-center gap-1">
                 <span className="text-purple-400 text-lg">✓</span>
@@ -520,7 +517,7 @@ export default function BitcoinConferenceIndiaForm() {
                   <div className="mb-4 p-3 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-yellow-500/10 border border-orange-500/20 rounded-xl text-center">
                     <p className="text-sm text-orange-300 font-semibold flex items-center justify-center gap-2">
                       <span className="animate-pulse">⚡</span>
-                      <span>Only 50 seats left! Register now to secure your spot</span>
+                      <span>Only a few seats left! Register now to secure your spot</span>
                       <span className="animate-pulse">⚡</span>
                     </p>
                   </div>
