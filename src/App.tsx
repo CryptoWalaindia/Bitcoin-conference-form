@@ -22,7 +22,7 @@ function SuccessScreen() {
       <header className="relative z-10 px-4 pt-8 pb-4">
         <div className="max-w-4xl mx-auto">
           <img 
-            src="/jkl.png" 
+            src="/banner.png" 
             alt="Bitcoin Conference India Header" 
             className="w-full h-auto object-contain filter drop-shadow-lg rounded-2xl"
           />
@@ -276,7 +276,7 @@ export default function BitcoinConferenceIndiaForm() {
       <header className="relative z-10 px-4 pt-8 pb-4">
         <div className="max-w-4xl mx-auto">
           <img 
-            src="/jkl.png" 
+            src="/banner.png" 
             alt="Bitcoin Conference India Header" 
             className="w-full h-auto object-contain filter drop-shadow-lg rounded-2xl"
           />
