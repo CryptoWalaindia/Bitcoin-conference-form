@@ -108,6 +108,7 @@ export default function BitcoinConferenceIndiaForm() {
     gender: "",
     country: "",
     purpose: "",
+    agreeToTerms: false,
   });
 
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
@@ -120,7 +121,8 @@ export default function BitcoinConferenceIndiaForm() {
   const completionPercentage = useMemo(() => {
     const requiredFields = [form.firstName, form.lastName, form.email, form.age, form.gender, form.country, form.purpose];
     const filledFields = requiredFields.filter((field: string) => field.trim() !== "").length;
-    return Math.round((filledFields / requiredFields.length) * 100);
+    const agreeToTermsCompleted = form.agreeToTerms ? 1 : 0;
+    return Math.round(((filledFields + agreeToTermsCompleted) / (requiredFields.length + 1)) * 100);
   }, [form]);
 
   const countries = useMemo(
@@ -188,7 +190,7 @@ export default function BitcoinConferenceIndiaForm() {
     []
   );
 
-  function updateField(key: string, value: string) {
+  function updateField(key: string, value: string | boolean) {
     setForm((f) => ({ ...f, [key]: value }));
     setErrors((e) => ({ ...e, [key]: undefined }));
   }
@@ -223,6 +225,8 @@ export default function BitcoinConferenceIndiaForm() {
     if (!form.country) e.country = "Please select your country";
 
     if (!form.purpose.trim()) e.purpose = "Tell us your purpose of visit";
+
+    if (!form.agreeToTerms) e.agreeToTerms = "Please agree to the terms and conditions";
 
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -273,7 +277,7 @@ export default function BitcoinConferenceIndiaForm() {
       }
       
       // Clear the form
-      setForm({ firstName: "", lastName: "", countryCode: "+91", phone: "", email: "", age: "", gender: "", country: "", purpose: "" });
+      setForm({ firstName: "", lastName: "", countryCode: "+91", phone: "", email: "", age: "", gender: "", country: "", purpose: "", agreeToTerms: false });
     } catch (err: any) {
       setServerMessage(err.message || "Could not submit right now. Please try again.");
       console.error("Error submitting form:", err);
@@ -548,6 +552,34 @@ export default function BitcoinConferenceIndiaForm() {
                     className={twInput(errors.purpose, `min-h-[120px] ${focusedField === "purpose" ? "ring-2 ring-orange-500/60 border-orange-500/40" : ""}`)}
                   />
                   {errors.purpose && <p className="mt-1 text-sm text-red-400">{errors.purpose}</p>}
+                </div>
+
+                {/* Terms and Conditions Checkbox */}
+                <div className="sm:col-span-2 group">
+                  <div className="flex items-start gap-3">
+                    <div className="flex items-center h-5">
+                      <input
+                        id="agreeToTerms"
+                        name="agreeToTerms"
+                        type="checkbox"
+                        checked={form.agreeToTerms}
+                        onChange={(e) => updateField("agreeToTerms", e.target.checked)}
+                        onFocus={() => setFocusedField("agreeToTerms")}
+                        onBlur={() => setFocusedField(null)}
+                        className={`w-4 h-4 text-orange-600 bg-neutral-800 border-neutral-600 rounded focus:ring-orange-500 focus:ring-2 transition-all duration-200 ${
+                          focusedField === "agreeToTerms" ? "ring-2 ring-orange-500/60" : ""
+                        } ${
+                          errors.agreeToTerms ? "border-red-500" : ""
+                        }`}
+                      />
+                    </div>
+                    <div className="text-sm">
+                      <label htmlFor="agreeToTerms" className="text-neutral-300 group-hover:text-orange-300 transition-colors duration-300 cursor-pointer">
+                        I agree to the T&C and Receive Marketing Emails
+                      </label>
+                      {errors.agreeToTerms && <p className="mt-1 text-sm text-red-400">{errors.agreeToTerms}</p>}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Enhanced Submit Section */}
