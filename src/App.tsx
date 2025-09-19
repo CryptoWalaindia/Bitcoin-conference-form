@@ -38,7 +38,7 @@ function SuccessScreen() {
               <img 
                 src="/ticket.png" 
                 alt="Bitcoin Conference India Ticket" 
-                className="w-64 sm:w-80 md:max-w-lg lg:max-w-lg h-auto object-contain filter drop-shadow-lg lg:ml-2 md:ml-4 lg:ml-6 -mt-4 sm:-mt-6 md:-mt-8 lg:-mt-12 xl:-mt-16"
+                className="w-64 md:w-auto md:max-w-lg h-auto object-contain filter drop-shadow-lg lg:ml-2 md:ml-4 lg:ml-6 -mt-4 md:-mt-8 lg:-mt-12 xl:-mt-16"
               />
             </div>
             
