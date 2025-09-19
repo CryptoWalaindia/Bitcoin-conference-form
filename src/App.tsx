@@ -31,20 +31,20 @@ function SuccessScreen() {
 
       <main className="relative z-10 px-4 pb-24">
         <div className="max-w-6xl mx-auto">
-          {/* Ticket and Success Content - Side by side layout */}
-          <div className="flex flex-col lg:flex-row items-start gap-8">
-            {/* Ticket Image - Left side */}
-            <div className="flex-shrink-0">
+          {/* Mobile: Ticket above, Content below | Desktop: Side by side layout */}
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
+            {/* Ticket Image */}
+            <div className="flex-shrink-0 w-full lg:w-auto flex justify-center lg:justify-start">
               <img 
                 src="/ticket.png" 
                 alt="Bitcoin Conference India Ticket" 
-                className="max-w-lg h-auto object-contain filter drop-shadow-lg ml-2 md:ml-4 lg:ml-6 -mt-8 md:-mt-12 lg:-mt-16"
+                className="w-64 md:w-80 lg:max-w-lg h-auto object-contain filter drop-shadow-lg lg:ml-2 lg:md:ml-4 lg:lg:ml-6 -mt-4 md:-mt-6 lg:-mt-8 lg:md:-mt-12 lg:lg:-mt-16"
               />
             </div>
             
-            {/* Success Content - Right side */}
-            <div className="flex-1 lg:mt-8 -ml-16 md:-ml-24 lg:-ml-32">
-              <div className="text-left px-6 py-8">
+            {/* Success Content */}
+            <div className="flex-1 w-full lg:mt-8 lg:-ml-16 lg:md:-ml-24 lg:lg:-ml-32">
+              <div className="text-center lg:text-left px-6 py-8">
                 {/* Success Message */}
                 <div className="mb-8">
                   <div className="text-xl md:text-2xl lg:text-3xl text-neutral-200 leading-relaxed font-bold">
