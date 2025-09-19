@@ -29,59 +29,54 @@ function SuccessScreen() {
         </div>
       </header>
 
-      <main className="relative z-10 px-4 pb-24 flex items-center justify-center">
-        {/* Success Content */}
-        <div className="text-center max-w-2xl mx-auto px-6 py-8">
-          {/* Success Message */}
-          <div className="mb-8">
-            <div className="text-base md:text-lg text-neutral-300 leading-relaxed max-w-xl mx-auto">
-              <p className="mb-4">
-                Your registration has been submitted successfully. You now have a chance to get a 
-                <strong className="text-orange-400"> free ticket</strong> to the 
-                <strong className="text-orange-400"> Bitcoin Conference in India</strong>.
-              </p>
-              <p className="text-sm text-neutral-400">
-                We'll be in touch soon with more details about your registration.
-              </p>
-            </div>
-          </div>
-
-          {/* Information Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
-              <h3 className="font-semibold text-neutral-200 mb-1">Winner Selection</h3>
-              <p className="text-sm text-neutral-400">Winners will be contacted through email</p>
-            </div>
-            <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
-              <h3 className="font-semibold text-neutral-200 mb-1">Free Ticket Chance</h3>
-              <p className="text-sm text-neutral-400">You're in the running</p>
-            </div>
-            <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
-              <h3 className="font-semibold text-neutral-200 mb-1">Stay Tuned</h3>
-              <p className="text-sm text-neutral-400">More updates coming soon</p>
-            </div>
-          </div>
-
-          {/* Action Button */}
-          <div className="mb-8">
-            <button
-              onClick={() => window.location.reload()}
-              className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors duration-200"
-            >
-              Register Another Person
-            </button>
-          </div>
-
-          {/* Bitcoin Conference Branding */}
-          <div className="flex items-center justify-center gap-3 text-neutral-400">
-            <div className="w-6 h-6">
+      <main className="relative z-10 px-4 pb-24">
+        <div className="max-w-6xl mx-auto">
+          {/* Ticket and Success Content - Side by side layout */}
+          <div className="flex flex-col lg:flex-row items-start gap-8">
+            {/* Ticket Image - Left side */}
+            <div className="flex-shrink-0">
               <img 
-                src={logoSvg} 
-                alt="Bitcoin Conference India" 
-                className="w-full h-full object-contain"
+                src="/ticket.png" 
+                alt="Bitcoin Conference India Ticket" 
+                className="max-w-lg h-auto object-contain filter drop-shadow-lg ml-2 md:ml-4 lg:ml-6 -mt-8 md:-mt-12 lg:-mt-16"
               />
             </div>
-            <span className="text-base font-medium">Bitcoin Conference India</span>
+            
+            {/* Success Content - Right side */}
+            <div className="flex-1 lg:mt-8 -ml-16 md:-ml-24 lg:-ml-32">
+              <div className="text-left px-6 py-8">
+                {/* Success Message */}
+                <div className="mb-8">
+                  <div className="text-xl md:text-2xl lg:text-3xl text-neutral-200 leading-relaxed font-bold">
+                    <p className="mb-2">
+                      Your registration has been
+                    </p>
+                    <p className="mb-2">
+                      submitted successfully.
+                    </p>
+                    <p className="mb-2">
+                      You now have a <span className="text-orange-400">free General admission ticket</span>
+                    </p>
+                    <p className="mb-4">
+                      to the <span className="text-orange-400">Bitcoin Conference in India</span>.
+                    </p>
+                    <p className="text-sm md:text-base text-neutral-400 font-normal">
+                      We'll be in touch soon with more details about your registration.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Button */}
+                <div className="mb-8">
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors duration-200"
+                  >
+                    Register Another Person
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -316,19 +311,25 @@ export default function BitcoinConferenceIndiaForm() {
       <main className="relative z-10 px-4 pb-24">
         <div className="max-w-4xl mx-auto">
           {/* Compelling announcement banner */}
-          <div className="mb-6 p-4 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl text-center">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <h3 className="text-lg font-bold text-orange-300">Register now and get a chance to win :</h3>
+          <div className="mb-6 p-6 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl text-center">
+            <div className="mb-4">
+              <h3 className="text-xl font-bold text-orange-300 mb-2">Register Now & Get Your</h3>
+              <div className="flex items-center justify-center gap-3">
+                <div className="text-2xl font-extrabold text-white bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                  FREE General Pass
+                </div>
+                <div className="text-lg text-orange-200">Worth $50</div>
+              </div>
             </div>
-            <div className="flex items-center justify-center gap-6 text-sm text-neutral-300">
-              <span className="flex items-center gap-1">
-                <span className="text-green-400 text-lg">✓</span>
-                <span className="font-extrabold text-white">FREE 2 day Conference Pass</span>
-              </span>
-              <span className="flex items-center gap-1">
-                <span className="text-purple-400 text-lg">✓</span>
-                <span className="font-extrabold text-white">Exclusive Swag Kit</span>
-              </span>
+            <div className="flex items-center justify-center gap-8 flex-wrap">
+              <div className="flex items-center gap-2 text-neutral-300">
+                <span className="text-green-400 text-lg">🎫</span>
+                <span className="font-semibold text-white">General Admission to Bitcoin India 2026</span>
+              </div>
+              <div className="flex items-center gap-2 text-neutral-300">
+                <span className="text-purple-400 text-lg">🏢</span>
+                <span className="font-semibold text-white">Full Access to Expo Hall</span>
+              </div>
             </div>
           </div>
           
