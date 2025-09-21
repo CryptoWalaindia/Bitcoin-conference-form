@@ -321,14 +321,14 @@ export default function BitcoinConferenceIndiaForm() {
             </div>
             
             {/* Benefits */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-              <div className="flex items-center gap-2 text-neutral-300">
-                <span className="text-green-400 text-lg">🎫</span>
-                <span className="font-semibold text-white text-sm sm:text-base">General Admission to Bitcoin India 2026</span>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-8">
+              <div className="flex items-center gap-1 text-neutral-300">
+                <span className="text-green-400 text-sm sm:text-lg">🎫</span>
+                <span className="font-semibold text-white text-xs sm:text-base">General Admission to Bitcoin India 2026</span>
               </div>
-              <div className="flex items-center gap-2 text-neutral-300">
-                <span className="text-purple-400 text-lg">🏢</span>
-                <span className="font-semibold text-white">2 Days Access to Exhibition Hall</span>
+              <div className="flex items-center gap-1 text-neutral-300">
+                <span className="text-purple-400 text-sm sm:text-lg">🏢</span>
+                <span className="font-semibold text-white text-xs sm:text-base">2 Days Access to Exhibition Hall</span>
               </div>
             </div>
           </div>
