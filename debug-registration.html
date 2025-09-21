@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Registration System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #0056b3; }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+        .form-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Registration System Debug Tool</h1>
+        
+        <div class="test-section info">
+            <h3>Environment Check</h3>
+            <div id="env-check">Checking environment variables...</div>
+        </div>
+
+        <div class="test-section info">
+            <h3>Database Connection Test</h3>
+            <button onclick="testConnection()">Test Supabase Connection</button>
+            <div id="connection-result"></div>
+        </div>
+
+        <div class="test-section info">
+            <h3>Table Structure Check</h3>
+            <button onclick="checkTableStructure()">Check Table Structure</button>
+            <div id="table-result"></div>
+        </div>
+
+        <div class="test-section info">
+            <h3>RLS Policies Check</h3>
+            <button onclick="checkRLSPolicies()">Check RLS Policies</button>
+            <div id="rls-result"></div>
+        </div>
+
+        <div class="form-section">
+            <h3>🧪 Test Registration Form</h3>
+            <form id="test-form">
+                <label>First Name:</label>
+                <input type="text" id="firstName" value="Test" required>
+                
+                <label>Last Name:</label>
+                <input type="text" id="lastName" value="User" required>
+                
+                <label>Email:</label>
+                <input type="email" id="email" value="test@example.com" required>
+                
+                <label>Phone (optional):</label>
+                <input type="text" id="phone" value="+91 9876543210">
+                
+                <label>Age:</label>
+                <input type="number" id="age" value="25" min="1" max="120" required>
+                
+                <label>Gender:</label>
+                <select id="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Others">Others</option>
+                </select>
+                
+                <label>Country/State:</label>
+                <input type="text" id="state" value="India" required>
+                
+                <label>Purpose:</label>
+                <textarea id="purpose" required>Learning about Bitcoin technology</textarea>
+                
+                <button type="submit" style="margin-top: 15px;">🚀 Test Registration</button>
+            </form>
+            <div id="form-result"></div>
+        </div>
+
+        <div class="test-section info">
+            <h3>View Existing Registrations</h3>
+            <button onclick="viewRegistrations()">View All Registrations</button>
+            <div id="registrations-result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://gadruxbqlirrjgotlcwp.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhZHJ1eGJxbGlycmpnb3RsY3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4NDEzMjAsImV4cCI6MjA3MzQxNzMyMH0.t8BWhRzpzDrDtJI-3LK81LIkmRmr8qf11xuXaQ6IyPM';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Check environment
+        document.getElementById('env-check').innerHTML = `
+            <strong>Supabase URL:</strong> ${SUPABASE_URL}<br>
+            <strong>Anon Key:</strong> ${SUPABASE_ANON_KEY ? 'Present ✅' : 'Missing ❌'}
+        `;
+
+        async function testConnection() {
+            const resultDiv = document.getElementById('connection-result');
+            resultDiv.innerHTML = '<p>Testing connection...</p>';
+            
+            try {
+                // Test basic connectivity
+                const response = await fetch(SUPABASE_URL + '/rest/v1/', {
+                    method: 'HEAD',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                if (response.ok || response.status === 404) {
+                    resultDiv.innerHTML = '<div class="success"><strong>✅ Connection Successful</strong><br>Status: ' + response.status + '</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error"><strong>❌ Connection Failed</strong><br>Status: ' + response.status + '</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error"><strong>❌ Connection Error</strong><br>' + error.message + '</div>';
+            }
+        }
+
+        async function checkTableStructure() {
+            const resultDiv = document.getElementById('table-result');
+            resultDiv.innerHTML = '<p>Checking table structure...</p>';
+            
+            try {
+                // Try to get table info using a simple query
+                const { data, error } = await supabase
+                    .from('registrations')
+                    .select('*')
+                    .limit(1);
+                
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error"><strong>❌ Table Check Failed</strong><br>Error: ${error.message}<br>Code: ${error.code}</div>`;
+                } else {
+                    resultDiv.innerHTML = '<div class="success"><strong>✅ Table Exists and Accessible</strong><br>Sample query successful</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><strong>❌ Table Check Error</strong><br>${error.message}</div>`;
+            }
+        }
+
+        async function checkRLSPolicies() {
+            const resultDiv = document.getElementById('rls-result');
+            resultDiv.innerHTML = '<p>Checking RLS policies...</p>';
+            
+            try {
+                // Try to insert a test record to check policies
+                const testData = {
+                    first_name: 'RLS',
+                    last_name: 'Test',
+                    email: 'rls-test-' + Date.now() + '@example.com',
+                    age: 25,
+                    gender: 'Male',
+                    state: 'Test State',
+                    purpose: 'RLS Policy Test'
+                };
+                
+                const { data, error } = await supabase
+                    .from('registrations')
+                    .insert([testData])
+                    .select();
+                
+                if (error) {
+                    if (error.code === '42501') {
+                        resultDiv.innerHTML = '<div class="error"><strong>❌ RLS Policy Issue</strong><br>Permission denied. RLS policies may be blocking inserts.</div>';
+                    } else {
+                        resultDiv.innerHTML = `<div class="error"><strong>❌ RLS Test Failed</strong><br>Error: ${error.message}<br>Code: ${error.code}</div>`;
+                    }
+                } else {
+                    resultDiv.innerHTML = '<div class="success"><strong>✅ RLS Policies Working</strong><br>Test insert successful</div>';
+                    
+                    // Clean up test record
+                    if (data && data.length > 0) {
+                        await supabase
+                            .from('registrations')
+                            .delete()
+                            .eq('id', data[0].id);
+                    }
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><strong>❌ RLS Check Error</strong><br>${error.message}</div>`;
+            }
+        }
+
+        async function viewRegistrations() {
+            const resultDiv = document.getElementById('registrations-result');
+            resultDiv.innerHTML = '<p>Loading registrations...</p>';
+            
+            try {
+                const { data, error } = await supabase
+                    .from('registrations')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+                
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error"><strong>❌ Failed to Load Registrations</strong><br>Error: ${error.message}</div>`;
+                } else {
+                    if (data.length === 0) {
+                        resultDiv.innerHTML = '<div class="info"><strong>📝 No Registrations Found</strong><br>The table is empty.</div>';
+                    } else {
+                        let html = `<div class="success"><strong>✅ Found ${data.length} Registrations</strong></div><pre>`;
+                        data.forEach((reg, index) => {
+                            html += `${index + 1}. ${reg.first_name} ${reg.last_name} (${reg.email}) - ${reg.created_at}\n`;
+                        });
+                        html += '</pre>';
+                        resultDiv.innerHTML = html;
+                    }
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><strong>❌ View Error</strong><br>${error.message}</div>`;
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('test-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const resultDiv = document.getElementById('form-result');
+            resultDiv.innerHTML = '<p>Submitting test registration...</p>';
+            
+            try {
+                const formData = {
+                    first_name: document.getElementById('firstName').value,
+                    last_name: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value || null,
+                    age: parseInt(document.getElementById('age').value),
+                    gender: document.getElementById('gender').value,
+                    state: document.getElementById('state').value,
+                    purpose: document.getElementById('purpose').value
+                };
+                
+                console.log('Submitting data:', formData);
+                
+                const { data, error } = await supabase
+                    .from('registrations')
+                    .insert([formData])
+                    .select();
+                
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error"><strong>❌ Registration Failed</strong><br>Error: ${error.message}<br>Code: ${error.code}<br><pre>${JSON.stringify(error, null, 2)}</pre></div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="success"><strong>✅ Registration Successful!</strong><br>ID: ${data[0].id}<br>Created: ${data[0].created_at}</div>`;
+                    
+                    // Reset form
+                    document.getElementById('test-form').reset();
+                    document.getElementById('firstName').value = 'Test';
+                    document.getElementById('lastName').value = 'User';
+                    document.getElementById('email').value = 'test' + Date.now() + '@example.com';
+                    document.getElementById('phone').value = '+91 9876543210';
+                    document.getElementById('age').value = '25';
+                    document.getElementById('state').value = 'India';
+                    document.getElementById('purpose').value = 'Learning about Bitcoin technology';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><strong>❌ Submission Error</strong><br>${error.message}</div>`;
+            }
+        });
+
+        // Auto-run basic checks on page load
+        window.addEventListener('load', () => {
+            setTimeout(testConnection, 1000);
+            setTimeout(checkTableStructure, 2000);
+        });
+    </script>
+</body>
+</html>
