@@ -90,6 +90,18 @@ export async function submitRegistration(data: RegistrationData) {
     
     console.log('Supabase submission successful:', result)
     
+    // Send confirmation email with QR code ticket
+    if (result?.data && result.data.length > 0) {
+      const registrationId = result.data[0].id
+      try {
+        await sendConfirmationEmail(registrationId)
+        console.log('Confirmation email sent successfully')
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError)
+        // Don't fail the registration if email fails
+      }
+    }
+    
     // Clear any locally stored data on successful submission
     clearLocalRegistrations()
     
@@ -263,4 +275,23 @@ export async function syncPendingRegistrations(): Promise<{success: number, fail
   }
   
   return { success: successCount, failed: failedCount, errors }
+}
+
+// Function to send confirmation email via Supabase Edge Function
+export async function sendConfirmationEmail(registrationId: string): Promise<void> {
+  try {
+    const { data, error } = await supabase.functions.invoke('send-confirmation-email', {
+      body: { registration_id: registrationId }
+    })
+
+    if (error) {
+      console.error('Error calling email function:', error)
+      throw new Error(`Failed to send confirmation email: ${error.message}`)
+    }
+
+    console.log('Email function response:', data)
+  } catch (error: any) {
+    console.error('Error sending confirmation email:', error)
+    throw error
+  }
 }

@@ -61,7 +61,10 @@ function SuccessScreen() {
                       to the <span className="text-orange-400">Bitcoin Conference in India</span>.
                     </p>
                     <p className="text-sm md:text-base text-neutral-400 font-normal">
-                      We'll be in touch soon with more details about your registration.
+                      📧 A confirmation email with your QR code ticket has been sent to your email address.
+                    </p>
+                    <p className="text-xs md:text-sm text-neutral-500 font-normal mt-2">
+                      Please check your inbox (and spam folder) for your digital ticket with QR code.
                     </p>
                   </div>
                 </div>
@@ -316,7 +319,7 @@ export default function BitcoinConferenceIndiaForm() {
               <h3 className="text-xl font-bold text-orange-300 mb-2">Register Now & Get Your</h3>
               <div className="flex items-center justify-center gap-3">
                 <div className="text-2xl font-extrabold text-white bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                  FREE General Pass
+                  Free General Pass
                 </div>
                 <div className="text-lg text-orange-200">Worth $50</div>
               </div>
@@ -324,11 +327,11 @@ export default function BitcoinConferenceIndiaForm() {
             <div className="flex items-center justify-center gap-8 flex-wrap">
               <div className="flex items-center gap-2 text-neutral-300">
                 <span className="text-green-400 text-lg">🎫</span>
-                <span className="font-semibold text-white">General Admission to Bitcoin India 2026</span>
+                <span className="font-semibold text-white text-sm sm:text-base">General Admission to Bitcoin India 2026</span>
               </div>
               <div className="flex items-center gap-2 text-neutral-300">
                 <span className="text-purple-400 text-lg">🏢</span>
-                <span className="font-semibold text-white">Full Access to Expo Hall</span>
+                <span className="font-semibold text-white">2 Days Access to Exhibition Hall</span>
               </div>
             </div>
           </div>
