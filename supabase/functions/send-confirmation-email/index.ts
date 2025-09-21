@@ -74,32 +74,15 @@ serve(async (req) => {
     console.log('✅ Registration found:', {
       id: registration.id,
       email: registration.email,
-      name: `${registration.first_name} ${registration.last_name}`,
-      hasTicketId: !!registration.ticket_id
+      name: `${registration.first_name} ${registration.last_name}`
     })
 
-    // Generate ticket ID if not exists
-    let ticketId = registration.ticket_id
-    if (!ticketId) {
-      ticketId = `BTC2025-${Math.random().toString(36).substr(2, 8).toUpperCase()}`
-      console.log('🎫 Generated new ticket ID:', ticketId)
-    } else {
-      console.log('🎫 Using existing ticket ID:', ticketId)
-    }
-
-    // Generate QR code data
-    const qrData = `BTC2025-TICKET:${ticketId}:${registration.email}:${registration.first_name} ${registration.last_name}`
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData)}`
-    console.log('📱 QR code URL generated:', qrCodeUrl)
-
-    // Try to update registration with ticket info (but don't fail if it doesn't work)
+    // Update registration to mark email as sent (but don't fail if it doesn't work)
     try {
-      console.log('💾 Updating database with ticket info...')
+      console.log('💾 Updating database with email status...')
       const { error: updateError } = await supabase
         .from('registrations')
         .update({ 
-          ticket_id: ticketId,
-          ticket_qr_code: qrCodeUrl,
           email_sent: true,
           email_sent_at: new Date().toISOString()
         })
@@ -119,56 +102,38 @@ serve(async (req) => {
     const emailData = {
       from: 'Bitcoin Conference India <onboarding@resend.dev>',
       to: [registration.email],
-      subject: '🎫 Your Bitcoin Conference India 2025 Ticket - Confirmation & QR Code',
+      subject: '✅ Registration Confirmed - Bitcoin Conference India 2025',
       html: `
         <!DOCTYPE html>
         <html>
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Bitcoin Conference India 2025 - Your Ticket</title>
+          <title>Bitcoin Conference India 2025 - Registration Confirmed</title>
         </head>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">🎫 Your Ticket is Ready!</h1>
+            <h1 style="color: white; margin: 0; font-size: 28px;">✅ Registration Confirmed!</h1>
             <p style="color: white; margin: 10px 0 0 0; font-size: 18px;">Bitcoin Conference India 2025</p>
           </div>
           
           <div style="background: white; padding: 30px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 10px 10px;">
             <h2 style="color: #f7931a; margin-top: 0;">Hello ${registration.first_name}! 👋</h2>
             
-            <p>Thank you for registering for <strong>Bitcoin Conference India 2025</strong>! We're excited to have you join us for this incredible event.</p>
+            <p>Thank you for registering for <strong>Bitcoin Conference India 2025</strong>!</p>
+            
+            <p>We have received your details and <strong>we will contact you soon</strong>.</p>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="margin-top: 0; color: #333;">📋 Registration Details</h3>
+              <h3 style="margin-top: 0; color: #333;">📋 Your Registration Details</h3>
               <p><strong>Name:</strong> ${registration.first_name} ${registration.last_name}</p>
               <p><strong>Email:</strong> ${registration.email}</p>
-              <p><strong>Ticket ID:</strong> <code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">${ticketId}</code></p>
               <p><strong>Registration Date:</strong> ${new Date(registration.created_at).toLocaleDateString()}</p>
             </div>
             
-            <div style="text-align: center; margin: 30px 0;">
-              <h3 style="color: #f7931a;">🎫 Your QR Code Ticket</h3>
-              <p>Present this QR code at the event entrance:</p>
-              <img src="${qrCodeUrl}" alt="QR Code Ticket" style="max-width: 250px; border: 2px solid #f7931a; border-radius: 8px; padding: 10px; background: white;">
-              <p style="font-size: 12px; color: #666; margin-top: 10px;">Save this image or take a screenshot for easy access</p>
-            </div>
-            
-            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745;">
-              <h4 style="margin-top: 0; color: #155724;">✅ What's Next?</h4>
-              <ul style="margin: 0; padding-left: 20px;">
-                <li>Save this email and QR code</li>
-                <li>Bring a valid ID to the event</li>
-                <li>Arrive 30 minutes early for check-in</li>
-                <li>Follow us on social media for updates</li>
-              </ul>
-            </div>
-            
-            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin-top: 20px;">
-              <h4 style="margin-top: 0; color: #856404;">📅 Event Information</h4>
-              <p style="margin: 5px 0;"><strong>Date:</strong> Coming Soon</p>
-              <p style="margin: 5px 0;"><strong>Venue:</strong> To be announced</p>
-              <p style="margin: 5px 0;"><strong>Time:</strong> Details will be shared soon</p>
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin: 20px 0;">
+              <h4 style="margin-top: 0; color: #155724;">🎉 Exciting Opportunity!</h4>
+              <p style="margin: 0;">You now have a chance to <strong>win a free ticket</strong> to Bitcoin Conference India 2025! Stay tuned for more details.</p>
             </div>
             
             <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
@@ -213,8 +178,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: `Email sent successfully to ${registration.email}!`,
-        ticketId: ticketId,
+        message: `Confirmation email sent successfully to ${registration.email}!`,
         emailId: emailResult.id
       }),
       {

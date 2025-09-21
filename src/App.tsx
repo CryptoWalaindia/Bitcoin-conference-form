@@ -55,16 +55,13 @@ function SuccessScreen() {
                       submitted successfully.
                     </p>
                     <p className="mb-2">
-                      You now have a <span className="text-orange-400">free General admission ticket</span>
+                      You now have a <span className="text-orange-400">chance to get free General admission ticket</span>
                     </p>
                     <p className="mb-4">
                       to the <span className="text-orange-400">Bitcoin Conference in India</span>.
                     </p>
                     <p className="text-sm md:text-base text-neutral-400 font-normal">
-                      📧 A confirmation email with your QR code ticket has been sent to your email address.
-                    </p>
-                    <p className="text-xs md:text-sm text-neutral-500 font-normal mt-2">
-                      Please check your inbox (and spam folder) for your digital ticket with QR code.
+                      📧 Winners will be sent a confirmation email with your QR code ticket to your email address.
                     </p>
                   </div>
                 </div>
@@ -318,13 +315,9 @@ export default function BitcoinConferenceIndiaForm() {
           {/* Compelling announcement banner */}
           <div className="mb-6 p-6 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl text-center">
             <div className="mb-4">
-              <h3 className="text-xl font-bold text-orange-300 mb-2">Register Now & Get Your</h3>
-              <div className="flex items-center justify-center gap-3">
-                <div className="text-2xl font-extrabold text-white bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                  Free General Pass
-                </div>
-                <div className="text-lg text-orange-200">Worth $50</div>
-              </div>
+              <h3 className="text-xl font-bold text-orange-300 mb-2">
+                <span className="font-extrabold">Register Now and Get a chance to win GA pass (100$)</span>
+              </h3>
             </div>
             
             {/* Benefits */}
@@ -592,14 +585,6 @@ export default function BitcoinConferenceIndiaForm() {
 
                 {/* Enhanced Submit Section */}
                 <div className="sm:col-span-2 mt-6">
-                  {/* Urgency banner above submit */}
-                  <div className="mb-4 p-3 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-yellow-500/10 border border-orange-500/20 rounded-xl text-center">
-                    <p className="text-sm text-orange-300 font-semibold flex items-center justify-center gap-2">
-                      <span className="animate-pulse">⚡</span>
-                      <span>Only a few seats left! Register now to secure your spot</span>
-                      <span className="animate-pulse">⚡</span>
-                    </p>
-                  </div>
                   
                   <div className="flex items-center gap-3">
                     <button
