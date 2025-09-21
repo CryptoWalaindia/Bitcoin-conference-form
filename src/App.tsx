@@ -315,8 +315,8 @@ export default function BitcoinConferenceIndiaForm() {
           {/* Compelling announcement banner */}
           <div className="mb-6 p-6 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl text-center">
             <div className="mb-4">
-              <h3 className="text-sm sm:text-xl font-bold text-orange-300 mb-2 leading-tight">
-                <span className="font-extrabold">Register Now and Get a chance to win GA pass (100$)<br />And an exclusive bitcoin india merch kit</span>
+              <h3 className="text-xl font-bold text-orange-300 mb-2">
+                <span className="font-extrabold">Register Now and Get a chance to win GA pass (100$)</span>
               </h3>
             </div>
             
