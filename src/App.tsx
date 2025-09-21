@@ -95,6 +95,60 @@ function SuccessScreen() {
   );
 }
 
+// Countdown Timer Component
+function CountdownTimer() {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    // Set target date to 2 days from now (you can change this to a specific date)
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + 2);
+    
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate.getTime() - now;
+
+      if (distance > 0) {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        setTimeLeft({ days, hours, minutes, seconds });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center justify-center bg-gradient-to-br from-orange-600/30 to-red-600/30 border-2 border-orange-500/50 rounded-xl p-3 shadow-lg backdrop-blur-sm">
+      <div className="text-orange-200 text-xs font-semibold mb-2 flex items-center gap-1 animate-pulse">
+        <span className="text-base animate-bounce">⏰</span>
+        Limited Time Offer
+      </div>
+      <div className="flex gap-1 text-center">
+        <div className="bg-gradient-to-b from-black/40 to-black/60 rounded-lg px-2 py-1 min-w-[32px] shadow-inner border border-orange-500/20">
+          <div className="text-white font-bold text-base">{timeLeft.days.toString().padStart(2, '0')}</div>
+          <div className="text-orange-300 text-xs">Days</div>
+        </div>
+        <div className="text-orange-400 font-bold text-base flex items-center px-1">:</div>
+        <div className="bg-gradient-to-b from-black/40 to-black/60 rounded-lg px-2 py-1 min-w-[32px] shadow-inner border border-orange-500/20">
+          <div className="text-white font-bold text-base">{timeLeft.hours.toString().padStart(2, '0')}</div>
+          <div className="text-orange-300 text-xs">Hrs</div>
+        </div>
+        <div className="text-orange-400 font-bold text-base flex items-center px-1">:</div>
+        <div className="bg-gradient-to-b from-black/40 to-black/60 rounded-lg px-2 py-1 min-w-[32px] shadow-inner border border-orange-500/20">
+          <div className="text-white font-bold text-base">{timeLeft.minutes.toString().padStart(2, '0')}</div>
+          <div className="text-orange-300 text-xs">Min</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function BitcoinConferenceIndiaForm() {
   const [form, setForm] = useState({
     firstName: "",
@@ -314,24 +368,36 @@ export default function BitcoinConferenceIndiaForm() {
       <main className="relative z-10 px-4 pb-24">
         <div className="max-w-4xl mx-auto">
           {/* Compelling announcement banner */}
-          <div className="mb-6 p-6 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl text-center">
-            <div className="mb-4">
-              <h3 className="text-xl font-bold text-orange-300 mb-2">Register Now & Get Your</h3>
-              <div className="flex items-center justify-center gap-3">
-                <div className="text-2xl font-extrabold text-white bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                  Free General Pass
+          <div className="mb-6 p-6 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl">
+            <div className="flex flex-col lg:flex-row items-center gap-6">
+              {/* Countdown Timer on the left */}
+              <div className="flex-shrink-0 flex justify-center lg:justify-start">
+                <CountdownTimer />
+              </div>
+              
+              {/* Main content on the right */}
+              <div className="flex-1 text-center lg:text-left">
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold text-orange-300 mb-2">Register Now & Get Your</h3>
+                  <div className="flex items-center justify-center lg:justify-start gap-3">
+                    <div className="text-2xl font-extrabold text-white bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                      Free General Pass
+                    </div>
+                    <div className="text-lg text-orange-200">Worth $50</div>
+                  </div>
                 </div>
-                <div className="text-lg text-orange-200">Worth $50</div>
-              </div>
-            </div>
-            <div className="flex items-center justify-center gap-8 flex-wrap">
-              <div className="flex items-center gap-2 text-neutral-300">
-                <span className="text-green-400 text-lg">🎫</span>
-                <span className="font-semibold text-white text-sm sm:text-base">General Admission to Bitcoin India 2026</span>
-              </div>
-              <div className="flex items-center gap-2 text-neutral-300">
-                <span className="text-purple-400 text-lg">🏢</span>
-                <span className="font-semibold text-white">2 Days Access to Exhibition Hall</span>
+                
+                {/* Benefits */}
+                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-8">
+                  <div className="flex items-center gap-2 text-neutral-300">
+                    <span className="text-green-400 text-lg">🎫</span>
+                    <span className="font-semibold text-white text-sm sm:text-base">General Admission to Bitcoin India 2026</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-300">
+                    <span className="text-purple-400 text-lg">🏢</span>
+                    <span className="font-semibold text-white">2 Days Access to Exhibition Hall</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
