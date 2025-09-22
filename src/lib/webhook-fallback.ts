@@ -2,14 +2,10 @@
 // This can submit to alternative endpoints like Netlify Functions, Vercel, etc.
 
 export interface WebhookRegistrationData {
-  first_name: string
-  last_name: string
+  full_name: string
   phone?: string  // Optional field
   email: string
   age: number
-  gender: 'Male' | 'Female' | 'Others'
-  state: string
-  purpose: string
 }
 
 // Alternative submission methods when Supabase is unreachable
@@ -41,30 +37,43 @@ export class RegistrationFallback {
     }
   }
   
-  // Method 2: Submit to Google Forms (if you have one set up)
+  // Method 2: Submit to Google Forms (Primary Fallback)
   static async submitToGoogleForm(data: WebhookRegistrationData): Promise<boolean> {
     try {
-      // Google Forms submission URL format
-      // Replace with your actual Google Form URL and field IDs
-      const formUrl = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse'
+      // Google Forms submission URL - CONFIGURED
+      const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdfwinpF2k68PSsnbZCisJHBdPBXMRNndUpWUdEW_sjps3xXA/formResponse'
       
+      // Form field IDs - CONFIGURED
       const formData = new FormData()
-      formData.append('entry.FIELD_ID_1', data.first_name)
-      formData.append('entry.FIELD_ID_2', data.last_name)
-      formData.append('entry.FIELD_ID_3', data.email)
-      formData.append('entry.FIELD_ID_4', data.phone || '')
-      formData.append('entry.FIELD_ID_5', data.age.toString())
-      formData.append('entry.FIELD_ID_6', data.gender)
-      formData.append('entry.FIELD_ID_7', data.state)
-      formData.append('entry.FIELD_ID_8', data.purpose)
+      formData.append('entry.1905204977', data.full_name)        // Full Name
+      formData.append('entry.1867140863', data.email)            // Email
+      formData.append('entry.1889162089', data.phone || '')      // Phone
+      formData.append('entry.1207481842', data.age.toString())   // Age
+      
+      // Add timestamp for tracking (using a text field if available)
+      formData.append('entry.timestamp', new Date().toISOString())
+      formData.append('entry.source', 'Bitcoin Conference Registration Form')
+      
+      console.log('Submitting to Google Forms:', {
+        url: formUrl,
+        data: {
+          full_name: data.full_name,
+          email: data.email,
+          phone: data.phone || 'Not provided',
+          age: data.age
+        }
+      })
       
       const response = await fetch(formUrl, {
         method: 'POST',
         body: formData,
-        mode: 'no-cors' // Required for Google Forms
+        mode: 'no-cors' // Required for Google Forms - prevents CORS errors
       })
       
-      return true // no-cors mode doesn't return response status
+      // Google Forms with no-cors mode always appears successful
+      // We assume success if no error was thrown
+      console.log('Google Forms submission completed (no-cors mode)')
+      return true
     } catch (error) {
       console.error('Google Forms submission failed:', error)
       return false
@@ -81,13 +90,10 @@ export class RegistrationFallback {
         user_id: 'YOUR_USER_ID',
         template_params: {
           to_email: 'bitcoinconferenceindia@gmail.com',
-          from_name: `${data.first_name} ${data.last_name}`,
+          from_name: data.full_name,
           from_email: data.email,
           phone: data.phone || '',
           age: data.age,
-          gender: data.gender,
-          state: data.state,
-          purpose: data.purpose,
           timestamp: new Date().toLocaleString()
         }
       }
@@ -114,14 +120,10 @@ export class RegistrationFallback {
       const formspreeUrl = 'https://formspree.io/f/YOUR_FORM_ID' // Replace with your Formspree form ID
       
       const formData = new FormData()
-      formData.append('first_name', data.first_name)
-      formData.append('last_name', data.last_name)
+      formData.append('full_name', data.full_name)
       formData.append('email', data.email)
       formData.append('phone', data.phone || '')
       formData.append('age', data.age.toString())
-      formData.append('gender', data.gender)
-      formData.append('state', data.state)
-      formData.append('purpose', data.purpose)
       formData.append('timestamp', new Date().toISOString())
       formData.append('_subject', 'Bitcoin Conference India Registration')
       
@@ -140,25 +142,25 @@ export class RegistrationFallback {
     }
   }
 
-  // Method 5: Submit to multiple fallback services
+  // Method 5: Submit to multiple fallback services (Google Forms Priority)
   static async submitWithFallbacks(data: WebhookRegistrationData): Promise<{success: boolean, method: string}> {
     
-    // Try Formspree first (most reliable)
+    // Try Google Forms first (Primary fallback - reliable and free)
+    console.log('Trying Google Forms submission...')
+    if (await this.submitToGoogleForm(data)) {
+      return { success: true, method: 'google-forms' }
+    }
+    
+    // Try Formspree second
     console.log('Trying Formspree submission...')
     if (await this.submitToFormspree(data)) {
       return { success: true, method: 'formspree' }
     }
     
-    // Try webhook second
+    // Try webhook third
     console.log('Trying webhook submission...')
     if (await this.submitToWebhook(data)) {
       return { success: true, method: 'webhook' }
-    }
-    
-    // Try Google Forms
-    console.log('Trying Google Forms submission...')
-    if (await this.submitToGoogleForm(data)) {
-      return { success: true, method: 'google-forms' }
     }
     
     // Try email last

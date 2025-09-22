@@ -96,15 +96,11 @@ function SuccessScreen() {
 
 export default function BitcoinConferenceIndiaForm() {
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     countryCode: "+91", // Default to India
     phone: "",
     email: "",
     age: "",
-    gender: "",
-    country: "",
-    purpose: "",
     agreeToTerms: false,
   });
 
@@ -116,27 +112,13 @@ export default function BitcoinConferenceIndiaForm() {
 
   // Calculate form completion percentage (phone is optional)
   const completionPercentage = useMemo(() => {
-    const requiredFields = [form.firstName, form.lastName, form.email, form.age, form.gender, form.country, form.purpose];
+    const requiredFields = [form.fullName, form.email, form.age];
     const filledFields = requiredFields.filter((field: string) => field.trim() !== "").length;
     const agreeToTermsCompleted = form.agreeToTerms ? 1 : 0;
     return Math.round(((filledFields + agreeToTermsCompleted) / (requiredFields.length + 1)) * 100);
   }, [form]);
 
-  const countries = useMemo(
-    () => [
-      "Afghanistan", "Albania", "Algeria", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
-      "Bahrain", "Bangladesh", "Belarus", "Belgium", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Bulgaria",
-      "Cambodia", "Canada", "Chile", "China", "Colombia", "Croatia", "Czech Republic",
-      "Denmark", "Ecuador", "Egypt", "Estonia", "Ethiopia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece",
-      "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
-      "Japan", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg",
-      "Malaysia", "Mexico", "Morocco", "Nepal", "Netherlands", "New Zealand", "Nigeria", "Norway",
-      "Pakistan", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia",
-      "Saudi Arabia", "Singapore", "Slovakia", "Slovenia", "South Africa", "South Korea", "Spain", "Sri Lanka", "Sweden", "Switzerland",
-      "Taiwan", "Thailand", "Turkey", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Venezuela", "Vietnam"
-    ],
-    []
-  );
+
 
   const countryCodes = useMemo(
     () => [
@@ -195,8 +177,7 @@ export default function BitcoinConferenceIndiaForm() {
   function validate() {
     const e: Record<string, string | undefined> = {};
 
-    if (!form.firstName.trim()) e.firstName = "Please enter your first name";
-    if (!form.lastName.trim()) e.lastName = "Please enter your last name";
+    if (!form.fullName.trim()) e.fullName = "Please enter your full name";
 
     // Phone is optional, but if provided, validate format (6 to 15 digits for international compatibility)
     if (form.phone.trim() && !/^\d{6,15}$/.test(form.phone.trim())) {
@@ -217,12 +198,6 @@ export default function BitcoinConferenceIndiaForm() {
       }
     }
 
-    if (!form.gender) e.gender = "Please select your gender";
-
-    if (!form.country) e.country = "Please select your country";
-
-    if (!form.purpose.trim()) e.purpose = "Tell us your purpose of visit";
-
     if (!form.agreeToTerms) e.agreeToTerms = "Please agree to the terms and conditions";
 
     setErrors(e);
@@ -239,13 +214,9 @@ export default function BitcoinConferenceIndiaForm() {
       
       // Prepare data for Supabase
       const registrationData: RegistrationData = {
-        first_name: form.firstName.trim(),
-        last_name: form.lastName.trim(),
+        full_name: form.fullName.trim(),
         email: form.email.trim().toLowerCase(),
         age: parseInt(form.age.trim()),
-        gender: form.gender as 'Male' | 'Female' | 'Others',
-        state: form.country,
-        purpose: form.purpose.trim(),
       };
 
       // Only include phone if provided (combine country code with phone number)
@@ -274,7 +245,7 @@ export default function BitcoinConferenceIndiaForm() {
       }
       
       // Clear the form
-      setForm({ firstName: "", lastName: "", countryCode: "+91", phone: "", email: "", age: "", gender: "", country: "", purpose: "", agreeToTerms: false });
+      setForm({ fullName: "", countryCode: "+91", phone: "", email: "", age: "", agreeToTerms: false });
     } catch (err: any) {
       setServerMessage(err.message || "Could not submit right now. Please try again.");
       console.error("Error submitting form:", err);
@@ -324,7 +295,7 @@ export default function BitcoinConferenceIndiaForm() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-center gap-2 sm:gap-8">
               <div className="flex items-center gap-1 text-neutral-300">
                 <span className="text-orange-400 text-sm sm:text-lg">•</span>
-                <span className="font-semibold text-white text-xs sm:text-base">General Admission to Bitcoin India 2026</span>
+                <span className="font-semibold text-white text-xs sm:text-base">General Admission to Bitcoin Conference India</span>
               </div>
               <div className="flex items-center gap-1 text-neutral-300">
                 <span className="text-orange-400 text-sm sm:text-lg">•</span>
@@ -380,44 +351,24 @@ export default function BitcoinConferenceIndiaForm() {
               </div>
 
               <form onSubmit={onSubmit} noValidate className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {/* First Name */}
-                <div className="group">
-                  <label htmlFor="firstName" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">
-                    First name
+                {/* Full Name */}
+                <div className="group sm:col-span-2">
+                  <label htmlFor="fullName" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">
+                    Full name <span className="text-red-400">*</span>
                   </label>
                   <input
-                    id="firstName"
-                    name="firstName"
+                    id="fullName"
+                    name="fullName"
                     type="text"
-                    autoComplete="given-name"
-                    value={form.firstName}
-                    onChange={(e) => updateField("firstName", e.target.value)}
-                    onFocus={() => setFocusedField("firstName")}
+                    autoComplete="name"
+                    value={form.fullName}
+                    onChange={(e) => updateField("fullName", e.target.value)}
+                    onFocus={() => setFocusedField("fullName")}
                     onBlur={() => setFocusedField(null)}
-                    placeholder="e.g., Satoshi"
-                    className={twInput(errors.firstName, focusedField === "firstName" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
+                    placeholder="e.g., Satoshi Nakamoto"
+                    className={twInput(errors.fullName, focusedField === "fullName" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
                   />
-                  {errors.firstName && <p className="mt-1 text-sm text-red-400">{errors.firstName}</p>}
-                </div>
-
-                {/* Last Name */}
-                <div className="group">
-                  <label htmlFor="lastName" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">
-                    Last name
-                  </label>
-                  <input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    autoComplete="family-name"
-                    value={form.lastName}
-                    onChange={(e) => updateField("lastName", e.target.value)}
-                    onFocus={() => setFocusedField("lastName")}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="e.g., Nakamoto"
-                    className={twInput(errors.lastName, focusedField === "lastName" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
-                  />
-                  {errors.lastName && <p className="mt-1 text-sm text-red-400">{errors.lastName}</p>}
+                  {errors.fullName && <p className="mt-1 text-sm text-red-400">{errors.fullName}</p>}
                 </div>
 
                 {/* Phone */}
@@ -445,12 +396,15 @@ export default function BitcoinConferenceIndiaForm() {
                     <input
                       id="phone"
                       name="phone"
-                      type="tel"
+                      type="text"
                       inputMode="numeric"
-                      pattern="\d{6,15}"
                       maxLength={15}
                       value={form.phone}
-                      onChange={(e) => updateField("phone", e.target.value.replace(/[^\d]/g, ""))}
+                      onChange={(e) => {
+                        const numericValue = e.target.value.replace(/[^\d]/g, "");
+                        console.log("Phone input changed:", e.target.value, "->", numericValue);
+                        updateField("phone", numericValue);
+                      }}
                       onFocus={() => setFocusedField("phone")}
                       onBlur={() => setFocusedField(null)}
                       placeholder="1234567890"
@@ -462,7 +416,7 @@ export default function BitcoinConferenceIndiaForm() {
 
                 {/* Email */}
                 <div className="group">
-                  <label htmlFor="email" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">Email</label>
+                  <label htmlFor="email" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">Email <span className="text-red-400">*</span></label>
                   <input
                     id="email"
                     name="email"
@@ -480,79 +434,25 @@ export default function BitcoinConferenceIndiaForm() {
 
                 {/* Age */}
                 <div className="group">
-                  <label htmlFor="age" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">Age</label>
+                  <label htmlFor="age" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">Age <span className="text-red-400">*</span></label>
                   <input
                     id="age"
                     name="age"
                     type="text"
                     inputMode="numeric"
-                    pattern="\d{1,2}"
                     maxLength={2}
                     value={form.age}
-                    onChange={(e) => updateField("age", e.target.value.replace(/[^\d]/g, ""))}
+                    onChange={(e) => {
+                      const numericValue = e.target.value.replace(/[^\d]/g, "");
+                      console.log("Age input changed:", e.target.value, "->", numericValue);
+                      updateField("age", numericValue);
+                    }}
                     onFocus={() => setFocusedField("age")}
                     onBlur={() => setFocusedField(null)}
                     placeholder="e.g., 25"
                     className={twInput(errors.age, focusedField === "age" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
                   />
                   {errors.age && <p className="mt-1 text-sm text-red-400">{errors.age}</p>}
-                </div>
-
-                {/* Gender */}
-                <div className="group">
-                  <label htmlFor="gender" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">Gender</label>
-                  <select
-                    id="gender"
-                    name="gender"
-                    value={form.gender}
-                    onChange={(e) => updateField("gender", e.target.value)}
-                    onFocus={() => setFocusedField("gender")}
-                    onBlur={() => setFocusedField(null)}
-                    className={twInput(errors.gender, focusedField === "gender" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
-                  >
-                    <option value="" className="text-neutral-900 bg-white">Select</option>
-                    <option value="Male" className="text-neutral-900 bg-white">Male</option>
-                    <option value="Female" className="text-neutral-900 bg-white">Female</option>
-                    <option value="Others" className="text-neutral-900 bg-white">Others</option>
-                  </select>
-                  {errors.gender && <p className="mt-1 text-sm text-red-400">{errors.gender}</p>}
-                </div>
-
-                {/* Country */}
-                <div className="group">
-                  <label htmlFor="country" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">Country</label>
-                  <select
-                    id="country"
-                    name="country"
-                    value={form.country}
-                    onChange={(e) => updateField("country", e.target.value)}
-                    onFocus={() => setFocusedField("country")}
-                    onBlur={() => setFocusedField(null)}
-                    className={twInput(errors.country, focusedField === "country" ? "ring-2 ring-orange-500/60 border-orange-500/40" : "")}
-                  >
-                    <option value="" className="text-neutral-900 bg-white">Select your country</option>
-                    {countries.map((country) => (
-                      <option key={country} value={country} className="text-neutral-900 bg-white">{country}</option>
-                    ))}
-                  </select>
-                  {errors.country && <p className="mt-1 text-sm text-red-400">{errors.country}</p>}
-                </div>
-
-                {/* Purpose of visit */}
-                <div className="sm:col-span-2 group">
-                  <label htmlFor="purpose" className="block text-sm mb-2 text-neutral-300 group-hover:text-orange-300 transition-colors duration-300">Purpose of visit</label>
-                  <textarea
-                    id="purpose"
-                    name="purpose"
-                    rows={4}
-                    value={form.purpose}
-                    onChange={(e) => updateField("purpose", e.target.value)}
-                    onFocus={() => setFocusedField("purpose")}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="Attendee, speaker, sponsor, volunteer, media, or other"
-                    className={twInput(errors.purpose, `min-h-[120px] ${focusedField === "purpose" ? "ring-2 ring-orange-500/60 border-orange-500/40" : ""}`)}
-                  />
-                  {errors.purpose && <p className="mt-1 text-sm text-red-400">{errors.purpose}</p>}
                 </div>
 
                 {/* Terms and Conditions Checkbox */}
