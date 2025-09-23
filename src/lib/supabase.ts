@@ -49,6 +49,15 @@ async function submitWithRetry(data: RegistrationData, maxRetries: number) {
       
       if (error) {
         console.error(`Attempt ${attempt} failed:`, error)
+        
+        // Check for duplicate email errors - don't retry these
+        if (error.code === '23505' || 
+            (error.message && error.message.includes('duplicate key value violates unique constraint')) ||
+            (error.message && error.message.includes('unique_email'))) {
+          console.log('Duplicate email detected, not retrying:', error.message)
+          throw error
+        }
+        
         if (attempt === maxRetries) {
           throw error
         }
@@ -112,6 +121,14 @@ export async function submitRegistration(data: RegistrationData) {
       console.log('Table not found, trying fallback methods...')
     } else if (err.code === '42501') {
       console.log('Permission denied, trying fallback methods...')
+    } else if (err.code === '23505' || (err.message && err.message.includes('duplicate key value violates unique constraint'))) {
+      // Handle duplicate email error - don't use fallbacks for this
+      console.log('Duplicate email detected:', err.message)
+      throw new Error('This email address is already registered. Please use a different email address or contact support if you believe this is an error.')
+    } else if (err.message && err.message.includes('unique_email')) {
+      // Handle unique constraint violation
+      console.log('Email already exists:', err.message)
+      throw new Error('This email address is already registered. Please use a different email address or contact support if you believe this is an error.')
     } else {
       console.log('Database/network error, trying fallback methods...')
     }

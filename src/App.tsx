@@ -234,27 +234,39 @@ export default function BitcoinConferenceIndiaForm() {
       // Submit to Supabase with fallbacks
       const result = await submitRegistration(registrationData);
 
-      setSubmitted(true);
-      
-      // Handle different submission methods
-      if (result.method === 'supabase') {
-        setServerMessage("Registration successful! Thank you for registering for Bitcoin Conference India.");
-      } else if (result.method === 'formspree') {
-        setServerMessage("Registration submitted successfully via email! You'll receive a confirmation shortly. Thank you for registering!");
-      } else if (result.method === 'webhook') {
-        setServerMessage("Registration submitted successfully! Thank you for registering for Bitcoin Conference India.");
-      } else if (result.method === 'google-forms') {
-        setServerMessage("Registration submitted successfully! Thank you for registering for Bitcoin Conference India.");
-      } else if (result.method === 'local-storage') {
-        setServerMessage("Registration saved locally! Your data is secure and will be submitted when connection is restored.");
+      // Only show success page if the submission was actually successful
+      if (result.success) {
+        setSubmitted(true);
+        
+        // Handle different submission methods
+        if (result.method === 'supabase') {
+          setServerMessage("Registration successful! Thank you for registering for Bitcoin Conference India.");
+        } else if (result.method === 'formspree') {
+          setServerMessage("Registration submitted successfully via email! You'll receive a confirmation shortly. Thank you for registering!");
+        } else if (result.method === 'webhook') {
+          setServerMessage("Registration submitted successfully! Thank you for registering for Bitcoin Conference India.");
+        } else if (result.method === 'google-forms') {
+          setServerMessage("Registration submitted successfully! Thank you for registering for Bitcoin Conference India.");
+        } else if (result.method === 'local-storage') {
+          setServerMessage("Registration saved locally! Your data is secure and will be submitted when connection is restored.");
+        } else {
+          setServerMessage((result as any).message || "Registration successful! Thank you for registering for Bitcoin Conference India.");
+        }
+        
+        // Clear the form only on successful submission
+        setForm({ fullName: "", countryCode: "+91", phone: "", email: "", age: "", agreeToTerms: false });
       } else {
-        setServerMessage((result as any).message || "Registration successful! Thank you for registering for Bitcoin Conference India.");
+        // Handle failed submission
+        setServerMessage((result as any).message || "Registration failed. Please try again.");
       }
-      
-      // Clear the form
-      setForm({ fullName: "", countryCode: "+91", phone: "", email: "", age: "", agreeToTerms: false });
     } catch (err: any) {
-      setServerMessage(err.message || "Could not submit right now. Please try again.");
+      // Check if it's a duplicate email error and set field-specific error
+      if (err.message && err.message.includes('already registered')) {
+        setErrors(prev => ({ ...prev, email: err.message }));
+        setServerMessage("");
+      } else {
+        setServerMessage(err.message || "Could not submit right now. Please try again.");
+      }
       console.error("Error submitting form:", err);
     } finally {
       setSubmitting(false);
