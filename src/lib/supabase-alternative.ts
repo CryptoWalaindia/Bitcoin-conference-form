@@ -42,7 +42,7 @@ export async function submitRegistrationAlt(data: any, maxRetries = 3) {
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
       
       const { data: result, error } = await supabaseAlt
-        .from('registrations_new')
+        .from('registrations')
         .insert([data])
         .select()
         .abortSignal(controller.signal)
@@ -97,7 +97,7 @@ export async function testAlternativeConnectivity() {
   // Test 2: Simple SELECT query
   try {
     const { data, error } = await supabaseAlt
-      .from('registrations_new')
+      .from('registrations')
       .select('count', { count: 'exact', head: true })
     
     tests.push({ test: 'SELECT query', success: !error, error: error?.message })

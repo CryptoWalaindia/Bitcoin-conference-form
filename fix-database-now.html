@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Emergency Database Fix</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .danger { background: #dc3545; }
+        .danger:hover { background: #c82333; }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #e9ecef;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Emergency Database Column Fix</h1>
+        <p>This tool fixes the "value too long for type character varying(15)" errors by updating your database column lengths.</p>
+        
+        <div class="warning">
+            <strong>⚠️ Important:</strong> This will modify your database structure. Make sure you have a backup!
+        </div>
+
+        <div class="step">
+            <h3>Step 1: Test Connection</h3>
+            <button onclick="testConnection()">Test Database Connection</button>
+            <div id="connectionStatus"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Check Current Schema</h3>
+            <button onclick="checkCurrentSchema()">Check Current Column Lengths</button>
+            <div id="schemaStatus"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Apply Fix</h3>
+            <button onclick="applyFix()" class="danger">Apply Database Fix</button>
+            <div id="fixStatus"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 4: Verify Fix</h3>
+            <button onclick="verifyFix()">Verify Changes</button>
+            <div id="verifyStatus"></div>
+        </div>
+
+        <div class="step">
+            <h3>Manual Alternative</h3>
+            <p>If the automatic fix doesn't work, copy and paste this SQL into your Supabase SQL editor:</p>
+            <pre id="manualSQL">-- Loading SQL...</pre>
+        </div>
+    </div>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://gadruxbqlirrjgotlcwp.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhZHJ1eGJxbGlycmpnb3RsY3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY5MzE1NzQsImV4cCI6MjA0MjUwNzU3NH0.Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const fixSQL = `
+-- Emergency fix for database column length issues
+ALTER TABLE registrations ALTER COLUMN phone TYPE VARCHAR(30);
+ALTER TABLE registrations ALTER COLUMN phone DROP NOT NULL;
+ALTER TABLE registrations ALTER COLUMN first_name TYPE VARCHAR(150);
+ALTER TABLE registrations ALTER COLUMN last_name TYPE VARCHAR(150);
+ALTER TABLE registrations ALTER COLUMN state TYPE VARCHAR(150);
+ALTER TABLE registrations ALTER COLUMN email TYPE VARCHAR(320);
+ALTER TABLE registrations ALTER COLUMN state DROP NOT NULL;
+ALTER TABLE registrations ALTER COLUMN purpose DROP NOT NULL;
+        `.trim();
+
+        // Display manual SQL
+        document.getElementById('manualSQL').textContent = fixSQL;
+
+        async function testConnection() {
+            const statusDiv = document.getElementById('connectionStatus');
+            statusDiv.innerHTML = '<div class="info">Testing connection...</div>';
+
+            try {
+                const { data, error } = await supabase
+                    .from('registrations')
+                    .select('count', { count: 'exact', head: true });
+
+                if (error) {
+                    statusDiv.innerHTML = `<div class="error">❌ Connection failed: ${error.message}</div>`;
+                } else {
+                    statusDiv.innerHTML = '<div class="success">✅ Database connection successful!</div>';
+                }
+            } catch (err) {
+                statusDiv.innerHTML = `<div class="error">❌ Connection error: ${err.message}</div>`;
+            }
+        }
+
+        async function checkCurrentSchema() {
+            const statusDiv = document.getElementById('schemaStatus');
+            statusDiv.innerHTML = '<div class="info">Checking current schema...</div>';
+
+            try {
+                const { data, error } = await supabase.rpc('get_column_info', {
+                    table_name: 'registrations'
+                });
+
+                if (error) {
+                    // Fallback: try to get schema info differently
+                    statusDiv.innerHTML = `<div class="warning">⚠️ Could not get detailed schema info: ${error.message}<br>Proceeding with fix anyway...</div>`;
+                } else {
+                    let schemaInfo = '<div class="info"><strong>Current Schema:</strong><br>';
+                    data.forEach(col => {
+                        schemaInfo += `${col.column_name}: ${col.data_type}(${col.character_maximum_length || 'N/A'})<br>`;
+                    });
+                    schemaInfo += '</div>';
+                    statusDiv.innerHTML = schemaInfo;
+                }
+            } catch (err) {
+                statusDiv.innerHTML = `<div class="warning">⚠️ Schema check failed: ${err.message}<br>This is normal - proceeding with fix...</div>`;
+            }
+        }
+
+        async function applyFix() {
+            const statusDiv = document.getElementById('fixStatus');
+            statusDiv.innerHTML = '<div class="info">Applying database fix...</div>';
+
+            try {
+                // Split the SQL into individual statements
+                const statements = fixSQL.split(';').filter(s => s.trim());
+                
+                for (let i = 0; i < statements.length; i++) {
+                    const statement = statements[i].trim();
+                    if (!statement) continue;
+
+                    statusDiv.innerHTML = `<div class="info">Executing statement ${i + 1}/${statements.length}...</div>`;
+                    
+                    const { data, error } = await supabase.rpc('exec_sql', {
+                        sql_statement: statement
+                    });
+
+                    if (error) {
+                        // Try alternative method
+                        const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                            },
+                            body: JSON.stringify({ sql_statement: statement })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Failed to execute statement: ${statement}`);
+                        }
+                    }
+                }
+
+                statusDiv.innerHTML = '<div class="success">✅ Database fix applied successfully!</div>';
+            } catch (err) {
+                statusDiv.innerHTML = `
+                    <div class="error">❌ Automatic fix failed: ${err.message}</div>
+                    <div class="warning">
+                        <strong>Manual Fix Required:</strong><br>
+                        Please copy the SQL from the "Manual Alternative" section below and run it in your Supabase SQL editor.
+                    </div>
+                `;
+            }
+        }
+
+        async function verifyFix() {
+            const statusDiv = document.getElementById('verifyStatus');
+            statusDiv.innerHTML = '<div class="info">Verifying fix...</div>';
+
+            try {
+                // Test with a long phone number
+                const testData = {
+                    first_name: 'Test User with Very Long Name',
+                    last_name: 'Test Last Name with Very Long Name',
+                    email: 'test.very.long.email.address@example.com',
+                    phone: '+971 123456789012345',
+                    age: 25,
+                    gender: 'Male',
+                    state: 'Bosnia and Herzegovina',
+                    purpose: 'Testing the database fix to ensure long values work properly'
+                };
+
+                const { data, error } = await supabase
+                    .from('registrations')
+                    .insert([testData])
+                    .select();
+
+                if (error) {
+                    statusDiv.innerHTML = `<div class="error">❌ Verification failed: ${error.message}</div>`;
+                } else {
+                    statusDiv.innerHTML = '<div class="success">✅ Fix verified! Long values can now be stored successfully.</div>';
+                    
+                    // Clean up test data
+                    if (data && data[0]) {
+                        await supabase
+                            .from('registrations')
+                            .delete()
+                            .eq('id', data[0].id);
+                    }
+                }
+            } catch (err) {
+                statusDiv.innerHTML = `<div class="error">❌ Verification error: ${err.message}</div>`;
+            }
+        }
+
+        // Auto-test connection on load
+        window.onload = () => {
+            testConnection();
+        };
+    </script>
+</body>
+</html>

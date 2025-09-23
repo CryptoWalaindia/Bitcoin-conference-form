@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Status Checker - Bitcoin Conference India</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: white;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .dns-record {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #f7931a;
+        }
+        .record-type {
+            font-weight: bold;
+            color: #f7931a;
+            font-size: 18px;
+        }
+        .record-details {
+            margin: 10px 0;
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.pending { background: #FF9800; color: white; }
+        .status.active { background: #4CAF50; color: white; }
+        .status.error { background: #F44336; color: white; }
+        .check-button {
+            background: #f7931a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .check-button:hover {
+            background: #e8851e;
+        }
+        .instructions {
+            background: rgba(0, 100, 200, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2196F3;
+        }
+        .copy-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌐 DNS Status Checker</h1>
+        <h2>Bitcoin Conference India</h2>
+        <p>Check and verify your DNS configuration</p>
+    </div>
+
+    <div class="instructions">
+        <h3>📋 Required DNS Records</h3>
+        <p>Update these records in your GoDaddy DNS management:</p>
+    </div>
+
+    <div class="dns-record">
+        <div class="record-type">A Record (Root Domain)</div>
+        <div class="record-details">
+            <strong>Type:</strong> A<br>
+            <strong>Name:</strong> @ (or leave blank)<br>
+            <strong>Value:</strong> 216.198.79.1 
+            <button class="copy-btn" onclick="copyToClipboard('216.198.79.1')">Copy IP</button><br>
+            <strong>TTL:</strong> 3600 (1 hour)
+        </div>
+        <span class="status pending" id="a-record-status">Pending Update</span>
+    </div>
+
+    <div class="dns-record">
+        <div class="record-type">CNAME Record (WWW Subdomain)</div>
+        <div class="record-details">
+            <strong>Type:</strong> CNAME<br>
+            <strong>Name:</strong> www<br>
+            <strong>Value:</strong> 840de9beab400acb.vercel-dns-017.com 
+            <button class="copy-btn" onclick="copyToClipboard('840de9beab400acb.vercel-dns-017.com')">Copy Value</button><br>
+            <strong>TTL:</strong> 3600 (1 hour)
+        </div>
+        <span class="status pending" id="cname-record-status">Pending Update</span>
+    </div>
+
+    <div class="instructions">
+        <h3>🔧 How to Update DNS in GoDaddy</h3>
+        <ol>
+            <li><strong>Go to:</strong> <a href="https://dcc.godaddy.com/control/dnsmanagement?domainName=bitcoinconferenceindia.com" target="_blank">GoDaddy DNS Management</a></li>
+            <li><strong>Find A Record:</strong> Look for record with Name "@" or blank</li>
+            <li><strong>Edit A Record:</strong> Change value to <code>216.198.79.1</code></li>
+            <li><strong>Find CNAME Record:</strong> Look for record with Name "www"</li>
+            <li><strong>Edit CNAME Record:</strong> Change value to <code>840de9beab400acb.vercel-dns-017.com</code></li>
+            <li><strong>Save Changes:</strong> Click save and wait 5-30 minutes</li>
+        </ol>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <button class="check-button" onclick="checkDNS()">🔍 Check DNS Status</button>
+        <button class="check-button" onclick="checkDomains()">🌐 Test Domains</button>
+        <button class="check-button" onclick="checkVercel()">⚡ Check Vercel Status</button>
+    </div>
+
+    <div id="results" style="margin-top: 30px;"></div>
+
+    <div class="instructions">
+        <h3>⏱️ Timeline</h3>
+        <ul>
+            <li><strong>DNS Update:</strong> Immediate (in GoDaddy)</li>
+            <li><strong>Propagation:</strong> 5-30 minutes</li>
+            <li><strong>Vercel Recognition:</strong> 5-10 minutes after propagation</li>
+            <li><strong>SSL Certificate:</strong> 5-10 minutes after domain verification</li>
+        </ul>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Copied to clipboard: ' + text);
+            });
+        }
+
+        function checkDNS() {
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="dns-record">
+                    <h3>🔍 DNS Check Results</h3>
+                    <p>Use these online tools to check DNS propagation:</p>
+                    <p>🔗 <a href="https://dnschecker.org/#A/bitcoinconferenceindia.com" target="_blank">Check A Record for bitcoinconferenceindia.com</a></p>
+                    <p>🔗 <a href="https://dnschecker.org/#CNAME/www.bitcoinconferenceindia.com" target="_blank">Check CNAME Record for www.bitcoinconferenceindia.com</a></p>
+                    <p>🔗 <a href="https://www.whatsmydns.net/#A/bitcoinconferenceindia.com" target="_blank">Alternative DNS Checker</a></p>
+                    <p><strong>Expected Values:</strong></p>
+                    <p>• A Record: 216.198.79.1</p>
+                    <p>• CNAME Record: 840de9beab400acb.vercel-dns-017.com</p>
+                </div>
+            `;
+        }
+
+        function checkDomains() {
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="dns-record">
+                    <h3>🌐 Domain Test Results</h3>
+                    <p>Click these links to test your domains:</p>
+                    <p>🔗 <a href="https://bitcoinconferenceindia.com" target="_blank">https://bitcoinconferenceindia.com</a></p>
+                    <p>🔗 <a href="https://www.bitcoinconferenceindia.com" target="_blank">https://www.bitcoinconferenceindia.com</a></p>
+                    <p>🔗 <a href="http://bitcoinconferenceindia.com" target="_blank">http://bitcoinconferenceindia.com (should redirect to HTTPS)</a></p>
+                    <p><strong>Expected Result:</strong> All should show your Bitcoin Conference registration form</p>
+                </div>
+            `;
+        }
+
+        function checkVercel() {
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="dns-record">
+                    <h3>⚡ Vercel Status Check</h3>
+                    <p>Check your Vercel dashboard:</p>
+                    <p>🔗 <a href="https://vercel.com/bitcoinwalas-projects/bitcoin-india-conference-form/settings/domains" target="_blank">Vercel Domains Settings</a></p>
+                    <p><strong>Expected Status:</strong></p>
+                    <p>• bitcoinconferenceindia.com: ✅ Valid Configuration</p>
+                    <p>• www.bitcoinconferenceindia.com: ✅ Valid Configuration</p>
+                    <p>• SSL certificates should be issued</p>
+                    <p><strong>If still showing errors:</strong> Click "Refresh" button in Vercel after DNS propagation</p>
+                </div>
+            `;
+        }
+
+        // Auto-check on page load
+        window.onload = function() {
+            console.log('DNS Status Checker loaded');
+            console.log('Required A Record: 216.198.79.1');
+            console.log('Required CNAME: 840de9beab400acb.vercel-dns-017.com');
+        };
+    </script>
+</body>
+</html>

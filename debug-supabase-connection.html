@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Supabase Connection</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Supabase Connection Debug Tool</h1>
+    
+    <button onclick="testConnection()">Test Supabase Connection</button>
+    <button onclick="testDirectInsert()">Test Direct Insert</button>
+    <button onclick="testRLSPolicies()">Test RLS Policies</button>
+    <button onclick="clearResults()">Clear Results</button>
+    
+    <div id="results"></div>
+
+    <script type="module">
+        // Supabase configuration
+        const SUPABASE_URL = 'https://gadruxbqlirrjgotlcwp.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhZHJ1eGJxbGlycmpnb3RsY3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4NDEzMjAsImV4cCI6MjA3MzQxNzMyMH0.t8BWhRzpzDrDtJI-3LK81LIkmRmr8qf11xuXaQ6IyPM';
+
+        function addResult(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        window.testConnection = async function() {
+            addResult('🔄 Testing Supabase connectivity...', 'info');
+            
+            try {
+                // Test basic connectivity
+                const response = await fetch(SUPABASE_URL + '/rest/v1/', {
+                    method: 'HEAD',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                if (response.ok || response.status === 404) {
+                    addResult('✅ Supabase connectivity: SUCCESS', 'success');
+                } else {
+                    addResult(`❌ Supabase connectivity: FAILED (HTTP ${response.status})`, 'error');
+                }
+                
+                // Test table access
+                const tableResponse = await fetch(SUPABASE_URL + '/rest/v1/registrations?select=count', {
+                    method: 'HEAD',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (tableResponse.ok) {
+                    addResult('✅ Table access: SUCCESS', 'success');
+                } else {
+                    addResult(`❌ Table access: FAILED (HTTP ${tableResponse.status})`, 'error');
+                    addResult(`Response: ${await tableResponse.text()}`, 'error');
+                }
+                
+            } catch (error) {
+                addResult(`❌ Connection test failed: ${error.message}`, 'error');
+            }
+        }
+
+        window.testDirectInsert = async function() {
+            addResult('🔄 Testing direct insert...', 'info');
+            
+            const testData = {
+                full_name: 'Test User ' + Date.now(),
+                email: 'test' + Date.now() + '@example.com',
+                phone: '+91 9876543210',
+                age: 25
+            };
+            
+            try {
+                const response = await fetch(SUPABASE_URL + '/rest/v1/registrations', {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    addResult('✅ Direct insert: SUCCESS', 'success');
+                    addResult(`<pre>${JSON.stringify(result, null, 2)}</pre>`, 'success');
+                } else {
+                    const errorText = await response.text();
+                    addResult(`❌ Direct insert: FAILED (HTTP ${response.status})`, 'error');
+                    addResult(`<pre>${errorText}</pre>`, 'error');
+                }
+                
+            } catch (error) {
+                addResult(`❌ Direct insert failed: ${error.message}`, 'error');
+            }
+        }
+
+        window.testRLSPolicies = async function() {
+            addResult('🔄 Testing RLS policies...', 'info');
+            
+            try {
+                // Test SELECT permission
+                const selectResponse = await fetch(SUPABASE_URL + '/rest/v1/registrations?select=count', {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (selectResponse.ok) {
+                    const result = await selectResponse.json();
+                    addResult('✅ SELECT permission: SUCCESS', 'success');
+                    addResult(`<pre>${JSON.stringify(result, null, 2)}</pre>`, 'success');
+                } else {
+                    addResult(`❌ SELECT permission: FAILED (HTTP ${selectResponse.status})`, 'error');
+                    addResult(`<pre>${await selectResponse.text()}</pre>`, 'error');
+                }
+                
+                // Test INSERT permission
+                const insertTestData = {
+                    full_name: 'RLS Test User ' + Date.now(),
+                    email: 'rlstest' + Date.now() + '@example.com',
+                    age: 30
+                };
+                
+                const insertResponse = await fetch(SUPABASE_URL + '/rest/v1/registrations', {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify(insertTestData)
+                });
+                
+                if (insertResponse.ok) {
+                    const result = await insertResponse.json();
+                    addResult('✅ INSERT permission: SUCCESS', 'success');
+                    addResult(`<pre>${JSON.stringify(result, null, 2)}</pre>`, 'success');
+                } else {
+                    addResult(`❌ INSERT permission: FAILED (HTTP ${insertResponse.status})`, 'error');
+                    addResult(`<pre>${await insertResponse.text()}</pre>`, 'error');
+                }
+                
+            } catch (error) {
+                addResult(`❌ RLS test failed: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

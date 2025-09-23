@@ -40,7 +40,7 @@ serve(async (req) => {
       throw new Error('Invalid JSON in request body')
     }
     
-    const { registrationId } = body
+    const { registration_id: registrationId } = body
     
     if (!registrationId) {
       throw new Error('Registration ID is required')
@@ -74,12 +74,13 @@ serve(async (req) => {
     console.log('✅ Registration found:', {
       id: registration.id,
       email: registration.email,
-      name: `${registration.first_name} ${registration.last_name}`
+      name: registration.full_name
     })
 
     // Update registration to mark email as sent (but don't fail if it doesn't work)
     try {
       console.log('💾 Updating database with email status...')
+      // Try to update email tracking fields if they exist
       const { error: updateError } = await supabase
         .from('registrations')
         .update({ 
@@ -89,12 +90,12 @@ serve(async (req) => {
         .eq('id', registrationId)
       
       if (updateError) {
-        console.log('⚠️ Database update failed (continuing anyway):', updateError)
+        console.log('⚠️ Database update failed (continuing anyway - email tracking columns may not exist):', updateError.message)
       } else {
-        console.log('✅ Database updated successfully')
+        console.log('✅ Database updated successfully with email tracking')
       }
     } catch (updateError) {
-      console.log('⚠️ Database update failed (continuing anyway):', updateError)
+      console.log('⚠️ Database update failed (continuing anyway - email tracking columns may not exist):', updateError)
     }
 
     // Send email using Resend
@@ -118,7 +119,7 @@ serve(async (req) => {
           </div>
           
           <div style="background: white; padding: 30px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 10px 10px;">
-            <h2 style="color: #f7931a; margin-top: 0;">Hello ${registration.first_name}! 👋</h2>
+            <h2 style="color: #f7931a; margin-top: 0;">Hello ${registration.full_name}! 👋</h2>
             
             <p>Thank you for registering for <strong>Bitcoin Conference India 2025</strong>!</p>
             
@@ -126,7 +127,7 @@ serve(async (req) => {
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="margin-top: 0; color: #333;">📋 Your Registration Details</h3>
-              <p><strong>Name:</strong> ${registration.first_name} ${registration.last_name}</p>
+              <p><strong>Name:</strong> ${registration.full_name}</p>
               <p><strong>Email:</strong> ${registration.email}</p>
               <p><strong>Registration Date:</strong> ${new Date(registration.created_at).toLocaleDateString()}</p>
             </div>

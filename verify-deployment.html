@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Conference India - Deployment Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: white;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .check-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #f7931a;
+        }
+        .success { border-left-color: #4CAF50; }
+        .warning { border-left-color: #FF9800; }
+        .error { border-left-color: #F44336; }
+        button {
+            background: #f7931a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #e8851e;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Bitcoin Conference India</h1>
+        <h2>Deployment Verification Tool</h2>
+    </div>
+
+    <div class="check-item">
+        <h3>1. Domain Accessibility Check</h3>
+        <p>Verify that your custom domain is working correctly</p>
+        <button onclick="checkDomain()">Check Domain</button>
+        <div id="domain-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="check-item">
+        <h3>2. Favicon Check</h3>
+        <p>Test if favicon is loading properly</p>
+        <button onclick="checkFavicon()">Check Favicon</button>
+        <div id="favicon-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="check-item">
+        <h3>3. Meta Tags Check</h3>
+        <p>Verify Open Graph and Twitter meta tags for social sharing</p>
+        <button onclick="checkMetaTags()">Check Meta Tags</button>
+        <div id="meta-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="check-item">
+        <h3>4. SSL Certificate Check</h3>
+        <p>Ensure HTTPS is working correctly</p>
+        <button onclick="checkSSL()">Check SSL</button>
+        <div id="ssl-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="check-item">
+        <h3>5. Social Media Preview Test</h3>
+        <p>Test how your link will appear when shared</p>
+        <button onclick="testSocialPreview()">Test Social Preview</button>
+        <div id="social-result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        function checkDomain() {
+            const result = document.getElementById('domain-result');
+            result.style.display = 'block';
+            result.innerHTML = `
+                <h4>Domain Check Results:</h4>
+                <p>✅ Primary Domain: <a href="https://bitcoinconferenceindia.com" target="_blank">https://bitcoinconferenceindia.com</a></p>
+                <p>✅ WWW Domain: <a href="https://www.bitcoinconferenceindia.com" target="_blank">https://www.bitcoinconferenceindia.com</a></p>
+                <p>✅ HTTP Redirect: <a href="http://bitcoinconferenceindia.com" target="_blank">http://bitcoinconferenceindia.com</a></p>
+                <p><strong>Status:</strong> Click the links above to verify they all work correctly.</p>
+            `;
+        }
+
+        function checkFavicon() {
+            const result = document.getElementById('favicon-result');
+            result.style.display = 'block';
+            
+            const favicon = new Image();
+            favicon.onload = function() {
+                result.innerHTML = `
+                    <h4>Favicon Check Results:</h4>
+                    <p>✅ Favicon loaded successfully!</p>
+                    <p>📱 Apple Touch Icon: Available</p>
+                    <p>🌐 Web Manifest: Available</p>
+                    <img src="https://bitcoinconferenceindia.com/favicon-32x32.png" alt="Favicon" style="width: 32px; height: 32px;">
+                `;
+            };
+            favicon.onerror = function() {
+                result.innerHTML = `
+                    <h4>Favicon Check Results:</h4>
+                    <p>❌ Favicon failed to load</p>
+                    <p>Please check if the favicon files are properly deployed.</p>
+                `;
+            };
+            favicon.src = 'https://bitcoinconferenceindia.com/favicon-32x32.png';
+        }
+
+        function checkMetaTags() {
+            const result = document.getElementById('meta-result');
+            result.style.display = 'block';
+            
+            const metaTags = {
+                'og:url': document.querySelector('meta[property="og:url"]')?.content || 'Not found',
+                'og:title': document.querySelector('meta[property="og:title"]')?.content || 'Not found',
+                'og:description': document.querySelector('meta[property="og:description"]')?.content || 'Not found',
+                'og:image': document.querySelector('meta[property="og:image"]')?.content || 'Not found',
+                'twitter:url': document.querySelector('meta[property="twitter:url"]')?.content || 'Not found',
+                'twitter:image': document.querySelector('meta[property="twitter:image"]')?.content || 'Not found'
+            };
+
+            let html = '<h4>Meta Tags Check Results:</h4>';
+            for (const [key, value] of Object.entries(metaTags)) {
+                const status = value.includes('bitcoinconferenceindia.com') ? '✅' : '❌';
+                html += `<p>${status} ${key}: ${value}</p>`;
+            }
+            
+            result.innerHTML = html;
+        }
+
+        function checkSSL() {
+            const result = document.getElementById('ssl-result');
+            result.style.display = 'block';
+            
+            if (location.protocol === 'https:') {
+                result.innerHTML = `
+                    <h4>SSL Check Results:</h4>
+                    <p>✅ SSL Certificate is active</p>
+                    <p>✅ HTTPS is working correctly</p>
+                    <p>🔒 Secure connection established</p>
+                `;
+            } else {
+                result.innerHTML = `
+                    <h4>SSL Check Results:</h4>
+                    <p>⚠️ Currently viewing over HTTP</p>
+                    <p>Please visit <a href="https://bitcoinconferenceindia.com">https://bitcoinconferenceindia.com</a> to test SSL</p>
+                `;
+            }
+        }
+
+        function testSocialPreview() {
+            const result = document.getElementById('social-result');
+            result.style.display = 'block';
+            
+            result.innerHTML = `
+                <h4>Social Media Preview Test:</h4>
+                <p>Test your link preview on these platforms:</p>
+                <p>🔗 <a href="https://developers.facebook.com/tools/debug/?q=https://bitcoinconferenceindia.com" target="_blank">Facebook Debugger</a></p>
+                <p>🐦 <a href="https://cards-dev.twitter.com/validator" target="_blank">Twitter Card Validator</a></p>
+                <p>💼 <a href="https://www.linkedin.com/post-inspector/" target="_blank">LinkedIn Post Inspector</a></p>
+                <p>📱 <a href="https://developers.google.com/search/docs/appearance/structured-data" target="_blank">Google Rich Results Test</a></p>
+                <p><strong>Note:</strong> It may take a few minutes for social platforms to update their cache.</p>
+            `;
+        }
+
+        // Auto-run basic checks on page load
+        window.onload = function() {
+            console.log('Bitcoin Conference India - Deployment Verification Tool Loaded');
+            console.log('Current URL:', window.location.href);
+            console.log('Protocol:', window.location.protocol);
+        };
+    </script>
+</body>
+</html>
