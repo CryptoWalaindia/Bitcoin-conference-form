@@ -585,7 +585,7 @@ function FooterNote() {
         {/* Social media icons */}
         <div className="flex items-center justify-center gap-4">
           <a 
-            href="https://x.com/btcconfIND?t=A_WikWk9MxG2ZyOrh3CZTQ&s=08" 
+            href="https://x.com/BitcoinConfIND?t=_l7vl2jlDXkdiumhnU8CMQ&s=09" 
             target="_blank" 
             rel="noopener noreferrer"
             className="w-12 h-12 rounded-full border border-white/20 bg-black/40 backdrop-blur-sm flex items-center justify-center hover:border-white/40 hover:bg-black/60 transition-all duration-300 hover:scale-110"
@@ -593,7 +593,7 @@ function FooterNote() {
             <span className="text-white text-lg font-bold">𝕏</span>
           </a>
           <a 
-            href="https://www.instagram.com/btcconfind?igsh=MTgyenZodHFvdDkzeA==" 
+            href="https://www.instagram.com/bitcoinconfind?igsh=MTgyenZodHFvdDkzeA==" 
             target="_blank" 
             rel="noopener noreferrer"
             className="w-12 h-12 rounded-full border border-white/20 bg-black/40 backdrop-blur-sm flex items-center justify-center hover:border-white/40 hover:bg-black/60 transition-all duration-300 hover:scale-110"
@@ -625,7 +625,7 @@ function FloatingHelpButton() {
           <div className="space-y-2 mb-4">
             <div className="flex items-center gap-2 text-xs text-neutral-300">
               <span className="text-green-400">✓</span>
-              <span>Fill all 8 fields completely</span>
+              <span>Fill all the fields completely</span>
             </div>
             <div className="flex items-center gap-2 text-xs text-neutral-300">
               <span className="text-blue-400">📱</span>
