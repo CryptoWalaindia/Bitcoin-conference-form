@@ -124,11 +124,11 @@ export async function submitRegistration(data: RegistrationData) {
     } else if (err.code === '23505' || (err.message && err.message.includes('duplicate key value violates unique constraint'))) {
       // Handle duplicate email error - don't use fallbacks for this
       console.log('Duplicate email detected:', err.message)
-      throw new Error('This email address is already registered. Please use a different email address or contact support if you believe this is an error.')
+      throw new Error('This email address is already registered, Please use a different email address.')
     } else if (err.message && err.message.includes('unique_email')) {
       // Handle unique constraint violation
       console.log('Email already exists:', err.message)
-      throw new Error('This email address is already registered. Please use a different email address or contact support if you believe this is an error.')
+      throw new Error('This email address is already registered, Please use a different email address.')
     } else {
       console.log('Database/network error, trying fallback methods...')
     }
