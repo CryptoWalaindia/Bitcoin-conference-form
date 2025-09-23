@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import logoSvg from "../2.png";
 import { submitRegistration, type RegistrationData } from "./lib/supabase";
+import { MetaTags } from "./components/MetaTags";
 
 // Single-file React page for a clean, modern registration form with interactive background
 // Tailwind CSS is assumed to be available. Default export renders the whole page.
@@ -9,6 +10,12 @@ import { submitRegistration, type RegistrationData } from "./lib/supabase";
 function SuccessScreen() {
   return (
     <div className="min-h-screen w-full relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-white">
+      {/* Meta Tags for SEO and Social Media */}
+      <MetaTags 
+        title="Registration Successful - Bitcoin Conference India"
+        description="Thank you for registering for Bitcoin Conference India! You now have a chance to win a free General Admission ticket to India's premier Bitcoin conference."
+      />
+      
       {/* Animated Background Elements */}
       <BackgroundElements />
       
@@ -261,6 +268,9 @@ export default function BitcoinConferenceIndiaForm() {
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-white">
+      {/* Meta Tags for SEO and Social Media */}
+      <MetaTags />
+      
       {/* Animated Background Elements */}
       <BackgroundElements />
       
